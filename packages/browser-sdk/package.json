@@ -1,0 +1,21 @@
+{
+  "name": "@esprat/browser-sdk",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf lib; tsc"
+  },
+  "dependencies": {
+    "@esprat/sdk": "^0.0.0",
+    "@types/file-saver": "^2.0.0",
+    "@types/sql.js": "^0.0.29",
+    "file-saver": "^2.0.0",
+    "sql.js": "^0.5.0",
+    "utility-types": "^2.1.0"
+  },
+  "devDependencies": {}
+}

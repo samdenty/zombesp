@@ -1,0 +1,9 @@
+{
+  "files": [],
+  "references": [
+    { "path": "sdk" },
+    { "path": "browser-sdk" },
+    { "path": "keyboard" },
+    { "path": "espcom" }
+  ]
+}

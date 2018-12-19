@@ -1,0 +1,16 @@
+{
+  "name": "@esprat/sdk",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf lib; tsc"
+  },
+  "dependencies": {
+    "typeorm": "^0.2.9"
+  },
+  "devDependencies": {}
+}

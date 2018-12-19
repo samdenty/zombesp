@@ -1,0 +1,26 @@
+{
+  "name": "esprat",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "tsc": "tsc -b packages",
+    "build": "lerna run build"
+  },
+  "devDependencies": {
+    "husky": "^1.3.0",
+    "prettier": "^1.15.3",
+    "lerna": "^3.6.0",
+    "@types/jest": "^23.3.10",
+    "@types/node": "^10.12.17",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.2.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
+}

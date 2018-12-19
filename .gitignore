@@ -80,3 +80,7 @@ target/
 
 # IntelliJ IDEA
 .idea/
+
+lib/**/*.js
+lib/**/*.d.ts
+lib/**/*.map
