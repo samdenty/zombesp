@@ -1,5 +1,5 @@
 {
-  "name": "@esprat/espcom",
+  "name": "@esprat/graphql-db",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
@@ -12,8 +12,6 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "mqtt": "^2.18.8"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }

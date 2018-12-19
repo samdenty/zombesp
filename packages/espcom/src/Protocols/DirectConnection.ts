@@ -1,20 +1,5 @@
 import { Protocol } from '../Protocol'
 
-class Res {
-  constructor(public id: number, public data: any) {}
-}
-
-class Req {
-  public listeners = new Set<(res: Res) => void>()
-  public response?: Res = null
-
-  constructor(public id: number, public topic: string, public data: any) {}
-
-  public serialize() {
-    return JSON.stringify([this.topic, this.id, this.data])
-  }
-}
-
 export class DirectConnection implements Protocol {
   private listeners = new Set<{
     topic: string
@@ -41,7 +26,6 @@ export class DirectConnection implements Protocol {
   }
 
   public connect() {
-    this.disconnect()
     this.websocket = new WebSocket(this.websocketAddress)
 
     return new Promise<any>(resolve => {
@@ -108,5 +92,20 @@ export class DirectConnection implements Protocol {
     this.listeners.forEach(listener => {
       if (topic === listener.topic) listener.callback(data, res)
     })
+  }
+}
+
+class Res {
+  constructor(public id: number, public data: any) {}
+}
+
+class Req {
+  public listeners = new Set<(res: Res) => void>()
+  public response?: Res = null
+
+  constructor(public id: number, public topic: string, public data: any) {}
+
+  public serialize() {
+    return JSON.stringify([this.topic, this.id, this.data])
   }
 }

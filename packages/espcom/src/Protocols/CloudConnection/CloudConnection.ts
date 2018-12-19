@@ -6,27 +6,12 @@ import {
   encodeStatusTopic,
 } from './utils'
 
-class Req {
-  public listeners = new Set<(res: Res) => void>()
-  public response?: Res = null
-
-  constructor(
-    public fromRef: string | number,
-    public id: number,
-    public topic: string,
-    public data: any
-  ) {}
-
-  public serialize() {
-    return JSON.stringify([this.fromRef, this.id, this.data])
-  }
-}
-
-class Res {
-  constructor(public id: number, public data: any, public packet: Packet) {}
-}
-
 export class CloudConnection implements Partial<Protocol> {
+  static sharedClient = new Map<
+    string,
+    { connections: number; client: MqttClient }
+  >()
+
   private listeners = new Set<{
     topic: string
     callback: (data: any, res: Res) => void
@@ -48,15 +33,36 @@ export class CloudConnection implements Partial<Protocol> {
   }
 
   public async connect() {
-    this.disconnect()
-    this.client = mqtt.connect(this.mqttAddress)
+    if (!CloudConnection.sharedClient.has(this.mqttAddress)) {
+      const client = mqtt.connect(this.mqttAddress)
+
+      CloudConnection.sharedClient.set(this.mqttAddress, {
+        connections: 0,
+        client,
+      })
+    }
+
+    const sharedClient = CloudConnection.sharedClient.get(this.mqttAddress)
+
+    this.client = sharedClient.client
     this.client.on('message', this.onMessage)
+    sharedClient.connections++
   }
 
   public async disconnect() {
     if (!this.client) return
 
-    this.client.end()
+    this.client.off('message', this.onMessage)
+
+    const sharedClient = CloudConnection.sharedClient.get(this.mqttAddress)
+    if (sharedClient) {
+      sharedClient.connections--
+
+      if (sharedClient.connections === 0) {
+        this.client.end()
+        CloudConnection.sharedClient.delete(this.mqttAddress)
+      }
+    }
   }
 
   public async emit(topic: string, data: any) {
@@ -105,6 +111,7 @@ export class CloudConnection implements Partial<Protocol> {
       this.client.options.clientId
     )
     if (!topic) return
+
     try {
       var [id, data] = JSON.parse(payload.toString())
       if (typeof id !== 'number') throw new Error('Malformed packet')
@@ -126,4 +133,24 @@ export class CloudConnection implements Partial<Protocol> {
       }
     })
   }
+}
+
+class Req {
+  public listeners = new Set<(res: Res) => void>()
+  public response?: Res = null
+
+  constructor(
+    public fromRef: string | number,
+    public id: number,
+    public topic: string,
+    public data: any
+  ) {}
+
+  public serialize() {
+    return JSON.stringify([this.fromRef, this.id, this.data])
+  }
+}
+
+class Res {
+  constructor(public id: number, public data: any, public packet: Packet) {}
 }

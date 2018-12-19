@@ -1,16 +1,19 @@
 {
   "name": "@esprat/sdk",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "",
-  "keywords": [],
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "license": "MIT",
   "scripts": {
-    "build": "rm -rf lib; tsc"
+    "tsc": "rm -rf lib; tsc",
+    "watch": "yarn tsc -w",
+    "build": "yarn tsc"
   },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
   "dependencies": {
-    "typeorm": "^0.2.9"
+    "@esprat/db": "0.0.0"
   },
   "devDependencies": {}
 }

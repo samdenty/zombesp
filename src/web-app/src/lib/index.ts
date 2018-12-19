@@ -1,6 +1,6 @@
 import * as orm from 'typeorm'
-import * as bSdk from '@esprat/browser-sdk'
-import { BrowserSDK } from '@esprat/browser-sdk'
+import * as bSdk from '@esprat/browser-db'
+import { BrowserDatabase } from '@esprat/browser-db'
 // import { ESPCom, DirectConnection, CloudConnection } from '@esprat/espcom'
 
 // const d = new DirectConnection('ws://192.168.1.102:81')
@@ -14,14 +14,13 @@ import { BrowserSDK } from '@esprat/browser-sdk'
 // c.emit('hello', 'world')
 
 Object.entries({ ...orm, ...bSdk }).forEach(([key, value]) => {
-  console.log(key)
   if (!window[key]) {
     window[key] = value
   }
 })
 
 export async function onMount() {
-  const sdk = new BrowserSDK()
+  const sdk = new BrowserDatabase()
   ;(window as any).sdk = sdk
 
   await sdk.connect({

@@ -1,8 +1,9 @@
 {
   "files": [],
   "references": [
+    { "path": "db" },
     { "path": "sdk" },
-    { "path": "browser-sdk" },
+    { "path": "browser-db" },
     { "path": "keyboard" },
     { "path": "espcom" }
   ]

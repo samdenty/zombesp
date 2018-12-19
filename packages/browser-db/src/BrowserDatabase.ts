@@ -1,14 +1,14 @@
-import { Database } from 'sql.js'
-import { SDK } from '@esprat/sdk'
+import { Database as SqlJsDatabase } from 'sql.js'
+import { Database } from '@esprat/db'
 import { SqljsDriver } from 'typeorm/driver/sqljs/SqljsDriver'
 import { SqljsConnectionOptions } from 'typeorm/driver/sqljs/SqljsConnectionOptions'
 import { saveAs } from 'file-saver'
 import { Connection } from 'typeorm'
 import { Overwrite } from 'utility-types'
 
-export class BrowserSDK extends SDK {
+export class BrowserDatabase extends Database {
   public connection: Connection & {
-    driver: Overwrite<SqljsDriver, { databaseConnection: Database }>
+    driver: Overwrite<SqljsDriver, { databaseConnection: SqlJsDatabase }>
   }
 
   public getDatabase() {

@@ -1,5 +1,5 @@
 {
-  "name": "@esprat/browser-sdk",
+  "name": "@esprat/db",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
@@ -7,14 +7,12 @@
   "typings": "lib/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf lib; tsc"
+    "tsc": "rm -rf lib; tsc",
+    "watch": "yarn tsc -w",
+    "build": "yarn tsc"
   },
   "dependencies": {
-    "@esprat/sdk": "^0.0.0",
-    "@types/file-saver": "^2.0.0",
-    "@types/sql.js": "^0.0.29",
-    "file-saver": "^2.0.0",
-    "sql.js": "^0.5.0",
+    "typeorm": "^0.2.9",
     "utility-types": "^2.1.0"
   },
   "devDependencies": {}
