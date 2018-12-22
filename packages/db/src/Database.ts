@@ -29,6 +29,16 @@ export class Database implements IDatabase {
 
   constructor() {}
 
+  private get directConnectionRepo() {
+    return this.connection.getRepository(DirectConnection)
+  }
+  private get mqttConnectionRepo() {
+    return this.connection.getRepository(MQTTConnection)
+  }
+  private get zombieRepo() {
+    return this.connection.getRepository(Zombie)
+  }
+
   public async connect(options: Partial<ConnectionOptions>) {
     this.connection = await createConnection({
       entities: allEntities,
@@ -37,9 +47,7 @@ export class Database implements IDatabase {
   }
 
   public async getZombie(id: string) {
-    const zombieRepo = this.connection.getRepository(Zombie)
-
-    const zombie = await zombieRepo.findOne({
+    const zombie = await this.zombieRepo.findOne({
       where: { id },
       relations: ['directConnections', 'mqttConnection'],
     })
@@ -48,25 +56,20 @@ export class Database implements IDatabase {
   }
 
   public async createZombie(id: string) {
-    const zombieRepo = this.connection.getRepository(Zombie)
-
-    const zombie = zombieRepo.create({ id })
+    const zombie = this.zombieRepo.create({ id })
     await this.connection.manager.save(zombie)
 
     return zombie
   }
 
   public async deleteZombie(id: string) {
-    const zombieRepo = this.connection.getRepository(Zombie)
-    const { affected } = await zombieRepo.delete({ id })
+    const { affected } = await this.zombieRepo.delete({ id })
 
     return !!affected
   }
 
   public async addDirectConnection(zombieId: string, address: string) {
-    const directConnectionRepo = this.connection.getRepository(DirectConnection)
-
-    const directConnection = directConnectionRepo.create({
+    const directConnection = this.directConnectionRepo.create({
       address,
       zombie: {
         id: zombieId,
@@ -79,9 +82,7 @@ export class Database implements IDatabase {
   }
 
   public async removeDirectConnection(zombieId: string, id: string) {
-    const directConnectionRepo = this.connection.getRepository(DirectConnection)
-
-    const { affected } = await directConnectionRepo.delete({
+    const { affected } = await this.directConnectionRepo.delete({
       id,
       zombie: {
         id: zombieId,
@@ -95,9 +96,7 @@ export class Database implements IDatabase {
     address: string,
     { username, password }: { username: string; password?: string } = {} as any
   ) {
-    const mqttConnectionRepo = this.connection.getRepository(MQTTConnection)
-
-    const mqttConnection = mqttConnectionRepo.create({
+    const mqttConnection = this.mqttConnectionRepo.create({
       address,
       username,
       password,
@@ -109,21 +108,16 @@ export class Database implements IDatabase {
   }
 
   public async deleteMQTTConnection(id: number) {
-    const mqttConnectionRepo = this.connection.getRepository(MQTTConnection)
-
-    const { affected } = await mqttConnectionRepo.delete({ id })
+    const { affected } = await this.mqttConnectionRepo.delete({ id })
 
     return !!affected
   }
 
   public async setMQTTConnection(zombieId: string, id?: number) {
-    const zombieRepo = this.connection.getRepository(Zombie)
-    const mqttConnectionRepo = this.connection.getRepository(MQTTConnection)
-
-    const zombie = await zombieRepo.findOne({ id: zombieId })
+    const zombie = await this.zombieRepo.findOne({ id: zombieId })
 
     if (id) {
-      const mqttConnection = await mqttConnectionRepo.findOne({ id })
+      const mqttConnection = await this.mqttConnectionRepo.findOne({ id })
       if (!mqttConnection) throw `Couldn't find MQTT connection`
       zombie.mqttConnection = mqttConnection
     } else {
