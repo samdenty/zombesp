@@ -6,7 +6,30 @@ const MQTT_CONNECTION_INTROSPECTION = gql`
     address
     username
     password
+    zombies {
+      id
+    }
   }
+`
+
+export const GET_MQTT_CONNECTION = gql`
+  query GetMQTTConnection($id: ID!) {
+    mqttConnection(id: $id) {
+      ...MQTTConnectionIntrospection
+    }
+  }
+
+  ${MQTT_CONNECTION_INTROSPECTION}
+`
+
+export const GET_MQTT_CONNECTIONS = gql`
+  query GetMQTTConnections($filter: MQTTConnectionsFilterInput) {
+    mqttConnections(filter: $filter) {
+      ...MQTTConnectionIntrospection
+    }
+  }
+
+  ${MQTT_CONNECTION_INTROSPECTION}
 `
 
 export const CREATE_MQTT_CONNECTION = gql`
@@ -33,6 +56,7 @@ export const SET_MQTT_CONNECTION = gql`
     setMQTTConnection(zombieId: $zombieId, id: $id) {
       ...MQTTConnectionIntrospection
     }
-    ${MQTT_CONNECTION_INTROSPECTION}
   }
+
+  ${MQTT_CONNECTION_INTROSPECTION}
 `

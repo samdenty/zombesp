@@ -11,6 +11,7 @@ export class MQTTConnection extends Connection {
   @Field(type => Zombie)
   @OneToMany(type => Zombie, zombie => zombie.mqttConnection, {
     onDelete: 'SET NULL',
+    eager: true,
   })
   zombies: Zombie[]
 

@@ -11,6 +11,7 @@ export class DirectConnection extends Connection {
   @Field(type => Zombie)
   @ManyToOne(type => Zombie, zombie => zombie.directConnections, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   zombie: Zombie
 

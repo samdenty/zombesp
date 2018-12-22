@@ -33,7 +33,16 @@ export const DELETE_ZOMBIE = gql`
 
 export const GET_ZOMBIE = gql`
   query GetZombie($id: ID!) {
-    getZombie(id: $id) {
+    zombie(id: $id) {
+      ...ZombieIntrospection
+    }
+  }
+  ${ZOMBIE_INTROSPECTION}
+`
+
+export const GET_ZOMBIES = gql`
+  query GetZombies {
+    zombies {
       ...ZombieIntrospection
     }
   }

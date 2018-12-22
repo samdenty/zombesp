@@ -13,6 +13,15 @@ export class GraphQLDatabase implements IDatabase {
 
   public async connect() {}
 
+  public async getZombies() {
+    const { data } = await this.client.query<Types.GetZombies>({
+      query: Queries.GET_ZOMBIES,
+      variables: {},
+    })
+
+    return plainToClass(Zombie, data.zombies)
+  }
+
   public async getZombie(id: string) {
     const { data } = await this.client.query<
       Types.GetZombie,
@@ -22,7 +31,7 @@ export class GraphQLDatabase implements IDatabase {
       variables: { id },
     })
 
-    return plainToClass(Zombie, data.getZombie)
+    return plainToClass(Zombie, data.zombie)
   }
 
   public async createZombie(id: string) {
@@ -47,6 +56,34 @@ export class GraphQLDatabase implements IDatabase {
     })
 
     return data.deleteZombie
+  }
+
+  public async getDirectConnection(id: string) {
+    const { data } = await this.client.query<
+      Types.GetDirectConnection,
+      Types.GetDirectConnectionVariables
+    >({
+      query: Queries.GET_DIRECT_CONNECTION,
+      variables: { id },
+    })
+
+    return plainToClass(DirectConnection, data.directConnection)
+  }
+
+  public async getDirectConnections(
+    filter: {
+      zombieId?: string
+    } = {}
+  ) {
+    const { data } = await this.client.query<
+      Types.GetDirectConnections,
+      Types.GetDirectConnectionsVariables
+    >({
+      query: Queries.GET_DIRECT_CONNECTIONS,
+      variables: { filter },
+    })
+
+    return plainToClass(DirectConnection, data.directConnections)
   }
 
   public async addDirectConnection(zombieId: string, address: string) {
@@ -98,6 +135,34 @@ export class GraphQLDatabase implements IDatabase {
     })
 
     return data.deleteMQTTConnection
+  }
+
+  public async getMQTTConnection(id: number) {
+    const { data } = await this.client.query<
+      Types.GetMQTTConnection,
+      Types.GetMQTTConnectionVariables
+    >({
+      query: Queries.GET_MQTT_CONNECTION,
+      variables: { id: id as any },
+    })
+
+    return plainToClass(MQTTConnection, data.mqttConnection)
+  }
+
+  public async getMQTTConnections(
+    filter: {
+      address?: string
+    } = {}
+  ) {
+    const { data } = await this.client.query<
+      Types.GetMQTTConnections,
+      Types.GetMQTTConnectionsVariables
+    >({
+      query: Queries.GET_MQTT_CONNECTIONS,
+      variables: { filter },
+    })
+
+    return plainToClass(MQTTConnection, data.mqttConnections)
   }
 
   public async setMQTTConnection(zombieId: string, id?: any) {

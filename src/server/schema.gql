@@ -13,6 +13,10 @@ type DirectConnection implements Connection {
   address: String!
 }
 
+input DirectConnectionsFilterInput {
+  zombieId: ID
+}
+
 type MQTTConnection implements Connection {
   id: ID!
   zombies: [Zombie!]!
@@ -24,6 +28,10 @@ type MQTTConnection implements Connection {
 input MQTTConnectionAuthInput {
   username: String!
   password: String
+}
+
+input MQTTConnectionsFilterInput {
+  address: String
 }
 
 type Mutation {
@@ -40,7 +48,12 @@ type Mutation {
 }
 
 type Query {
-  getZombie(id: ID!): Zombie
+  zombie(id: ID!): Zombie
+  zombies: [Zombie!]!
+  directConnection(id: ID!): DirectConnection!
+  directConnections(filter: DirectConnectionsFilterInput): [DirectConnection!]!
+  mqttConnection(id: ID!): MQTTConnection!
+  mqttConnections(filter: MQTTConnectionsFilterInput): [MQTTConnection!]!
 }
 
 type Zombie {

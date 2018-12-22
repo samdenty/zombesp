@@ -7,11 +7,16 @@ import { MQTTConnectionAuthInput } from './globalTypes'
 // GraphQL mutation operation: CreateMQTTConnection
 // ====================================================
 
+export interface CreateMQTTConnection_createMQTTConnection_zombies {
+  id: string
+}
+
 export interface CreateMQTTConnection_createMQTTConnection {
   id: string
   address: string
   username: string | null
   password: string | null
+  zombies: CreateMQTTConnection_createMQTTConnection_zombies[]
 }
 
 export interface CreateMQTTConnection {

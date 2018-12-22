@@ -1,9 +1,40 @@
-import { Resolver, Query, Arg, ID, Ctx, Mutation } from 'type-graphql'
-import { Zombie, DirectConnection } from '@esprat/db'
+import {
+  Root,
+  Resolver,
+  Query,
+  Arg,
+  FieldResolver,
+  ID,
+  Ctx,
+  Mutation,
+  Args,
+} from 'type-graphql'
+import { DirectConnection } from '@esprat/db'
 import { Context } from '../types'
+import { DirectConnectionsFilterInput } from '../entities'
 
-@Resolver()
+@Resolver(of => DirectConnection)
 export class DirectConnectionResolver {
+  @Query(type => DirectConnection)
+  async directConnection(
+    @Arg('id', type => ID)
+    id: string,
+    @Ctx() { database }: Context
+  ) {
+    const connection = await database.getDirectConnection(id)
+    return connection
+  }
+
+  @Query(type => [DirectConnection])
+  async directConnections(
+    @Arg('filter', { nullable: true })
+    filter: DirectConnectionsFilterInput,
+    @Ctx() { database }: Context
+  ) {
+    const connection = await database.getDirectConnections(filter)
+    return connection
+  }
+
   @Mutation(type => DirectConnection)
   async addDirectConnection(
     @Arg('zombieId', type => ID)
@@ -25,5 +56,15 @@ export class DirectConnectionResolver {
   ) {
     const result = await database.removeDirectConnection(zombieId, id)
     return result
+  }
+
+  @FieldResolver()
+  async zombie(
+    @Root() directConnection: DirectConnection,
+    @Ctx() { database }: Context
+  ) {
+    const zombie = await database.getZombie(directConnection.zombie.id)
+
+    return zombie
   }
 }

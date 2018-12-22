@@ -5,9 +5,14 @@
 // GraphQL mutation operation: AddDirectConnection
 // ====================================================
 
+export interface AddDirectConnection_addDirectConnection_zombie {
+  id: string
+}
+
 export interface AddDirectConnection_addDirectConnection {
   id: string
   address: string
+  zombie: AddDirectConnection_addDirectConnection_zombie
 }
 
 export interface AddDirectConnection {

@@ -5,26 +5,26 @@
 // GraphQL query operation: GetZombie
 // ====================================================
 
-export interface GetZombie_getZombie_mqttConnection {
+export interface GetZombie_zombie_mqttConnection {
   id: string
   address: string
   username: string | null
   password: string | null
 }
 
-export interface GetZombie_getZombie_directConnections {
+export interface GetZombie_zombie_directConnections {
   id: string
   address: string
 }
 
-export interface GetZombie_getZombie {
+export interface GetZombie_zombie {
   id: string
-  mqttConnection: GetZombie_getZombie_mqttConnection | null
-  directConnections: GetZombie_getZombie_directConnections[]
+  mqttConnection: GetZombie_zombie_mqttConnection | null
+  directConnections: GetZombie_zombie_directConnections[]
 }
 
 export interface GetZombie {
-  getZombie: GetZombie_getZombie | null
+  zombie: GetZombie_zombie | null
 }
 
 export interface GetZombieVariables {

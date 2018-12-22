@@ -1,17 +1,31 @@
-import { Resolver, Query, Arg, ID, Ctx, Mutation } from 'type-graphql'
+import {
+  Resolver,
+  Query,
+  Arg,
+  ID,
+  Ctx,
+  Mutation,
+  FieldResolver,
+} from 'type-graphql'
 import { Zombie } from '@esprat/db'
 import { Context } from '../types'
 
-@Resolver()
+@Resolver(of => Zombie)
 export class ZombieResolver {
   @Query(type => Zombie, { nullable: true })
-  async getZombie(
+  async zombie(
     @Arg('id', type => ID)
     id: string,
     @Ctx() { database }: Context
   ) {
     const zombie = await database.getZombie(id)
     return zombie
+  }
+
+  @Query(type => [Zombie])
+  async zombies(@Ctx() { database }: Context) {
+    const zombies = await database.getZombies()
+    return zombies
   }
 
   @Mutation(type => Zombie)

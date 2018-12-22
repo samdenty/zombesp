@@ -6,6 +6,7 @@ export interface IDatabase {
   connect(options?: any): Promise<void>
 
   getZombie(id: string): Promise<Zombie>
+  getZombies(): Promise<Zombie[]>
   createZombie(id: string): Promise<Zombie>
   deleteZombie(id: string): Promise<boolean>
 
@@ -15,15 +16,17 @@ export interface IDatabase {
   ): Promise<DirectConnection>
   removeDirectConnection(zombieId: string, id: string): Promise<boolean>
   getDirectConnection(id: string): Promise<DirectConnection>
-  getDirectConnections(zombieId?: string): Promise<DirectConnection[]>
+  getDirectConnections(filter?: {
+    zombieId?: string
+  }): Promise<DirectConnection[]>
 
   createMQTTConnection(
     address: string,
     auth?: { username: string; password?: string }
   ): Promise<MQTTConnection>
   deleteMQTTConnection(id: number): Promise<boolean>
-  getMQTTConnection(id: string): Promise<MQTTConnection>
-  getMQTTConnections(): Promise<MQTTConnection[]>
+  getMQTTConnection(id: number): Promise<MQTTConnection>
+  getMQTTConnections(filter?: { address?: string }): Promise<MQTTConnection[]>
   setMQTTConnection(zombieId: string, id?: number): Promise<MQTTConnection>
 }
 
@@ -56,6 +59,14 @@ export class Database implements IDatabase {
     })
 
     return zombie
+  }
+
+  public async getZombies() {
+    const zombies = await this.zombieRepo.find({
+      relations: ['directConnections', 'mqttConnection'],
+    })
+
+    return zombies
   }
 
   public async createZombie(id: string) {
@@ -100,9 +111,9 @@ export class Database implements IDatabase {
     return connection
   }
 
-  public async getDirectConnections(zombieId?: string) {
+  public async getDirectConnections(filter: { zombieId?: string } = {}) {
     const connections = await this.directConnectionRepo.find({
-      ...(zombieId && { zombie: { id: zombieId } }),
+      ...(filter.zombieId && { zombie: { id: filter.zombieId } }),
     })
 
     return connections
@@ -127,6 +138,18 @@ export class Database implements IDatabase {
     const { affected } = await this.mqttConnectionRepo.delete({ id })
 
     return !!affected
+  }
+
+  public async getMQTTConnection(id: number) {
+    const mqttConnection = await this.mqttConnectionRepo.findOne({ id })
+    return mqttConnection
+  }
+
+  public async getMQTTConnections(filter: { address?: string } = {}) {
+    const mqttConnections = await this.mqttConnectionRepo.find({
+      ...(filter.address && { address: filter.address }),
+    })
+    return mqttConnections
   }
 
   public async setMQTTConnection(zombieId: string, id?: number) {
