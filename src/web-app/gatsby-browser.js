@@ -1,8 +1,7 @@
 import 'reflect-metadata'
 import * as React from 'react'
-import { client } from './src/lib/apollo'
-import { ApolloProvider } from 'react-apollo'
+import { App } from './src/App'
 
 export const wrapRootElement = ({ element }) => {
-  return <ApolloProvider client={client}>{element}</ApolloProvider>
+  return <App>{element}</App>
 }

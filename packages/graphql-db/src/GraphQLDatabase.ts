@@ -7,11 +7,13 @@ import * as Queries from './queries'
 export class GraphQLDatabase implements IDatabase {
   private client: ApolloClient<any>
 
-  constructor(uri: string) {
+  public connect(uri: string) {
     this.client = new ApolloClient({ uri })
   }
 
-  public async connect() {}
+  public isConnected() {
+    return this.client ? true : false
+  }
 
   public async getZombies() {
     const { data } = await this.client.query<Types.GetZombies>({

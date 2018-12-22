@@ -5,6 +5,7 @@
 
     { "path": "browser-db" },
     { "path": "graphql-db" },
+    { "path": "dual-db" },
 
     { "path": "sdk" },
 

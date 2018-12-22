@@ -3,7 +3,8 @@ import { allEntities } from './allEntities'
 import { Zombie, DirectConnection, MQTTConnection } from './entities'
 
 export interface IDatabase {
-  connect(options?: any): Promise<void>
+  connect?(options?: any): void | Promise<void>
+  isConnected(): boolean
 
   getZombie(id: string): Promise<Zombie>
   getZombies(): Promise<Zombie[]>
@@ -50,6 +51,10 @@ export class Database implements IDatabase {
       entities: allEntities,
       ...options,
     } as ConnectionOptions)
+  }
+
+  public isConnected() {
+    return this.connection ? this.connection.isConnected : false
   }
 
   public async getZombie(id: string) {

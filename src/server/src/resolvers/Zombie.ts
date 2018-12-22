@@ -5,6 +5,7 @@ import {
   ID,
   Ctx,
   Mutation,
+  Root,
   FieldResolver,
 } from 'type-graphql'
 import { Zombie } from '@esprat/db'
@@ -46,5 +47,28 @@ export class ZombieResolver {
   ) {
     const result = await database.deleteZombie(id)
     return result
+  }
+
+  @FieldResolver()
+  async directConnections(@Root() root: Zombie, @Ctx() { database }: Context) {
+    if (root.directConnections) return root.directConnections
+
+    const directConnections = await database.getDirectConnections({
+      zombieId: root.id,
+    })
+
+    return directConnections
+  }
+
+  @FieldResolver()
+  async mqttConnection(@Root() root: Zombie, @Ctx() { database }: Context) {
+    if (root.mqttConnection === undefined) {
+      // TODO: Implement this:
+      // const directConnections = await database.getMQTTConnections({
+      //   zombieId: root.id,
+      // })
+    }
+
+    return root.directConnections
   }
 }

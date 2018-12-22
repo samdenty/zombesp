@@ -16,17 +16,14 @@ import { SDK } from '@esprat/sdk'
 // c.emit('hello', 'world')
 
 export async function onMount() {
-  const rdb = new GraphQLDatabase('http://localhost:4000')
-  const db = new BrowserDatabase()
-  ;(window as any).db = db
-  ;(window as any).rdb = rdb
-
-  await db.connect({ logging: ['query', 'schema'] })
-
-  const sdk = new SDK(db)
-  ;(window as any).sdk = sdk
-
-  console.log(db, sdk)
+  // const rdb = new GraphQLDatabase('http://localhost:4000')
+  // const db = new BrowserDatabase()
+  // ;(window as any).db = db
+  // ;(window as any).rdb = rdb
+  // await db.connect({ logging: ['query', 'schema'] })
+  // const sdk = new SDK(db)
+  // ;(window as any).sdk = sdk
+  // console.log(db, sdk)
 }
 
 Object.entries({ ...orm, ...bDb }).forEach(([key, value]) => {

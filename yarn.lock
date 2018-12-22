@@ -14301,7 +14301,7 @@ react-dev-utils@^4.2.1:
     strip-ansi "3.0.1"
     text-table "0.2.0"
 
-react-dom@^16.4.0, react-dom@^16.7.0:
+react-dom@^16.4.0:
   version "16.7.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.7.0.tgz#a17b2a7ca89ee7390bc1ed5eb81783c7461748b8"
   integrity sha512-D0Ufv1ExCAmF38P2Uh1lwpminZFRXEINJe53zRAbm4KPwSyd6DY/uDoS0Blj9jvPpn1+wivKpZYc8aAAN/nAkg==
@@ -14320,6 +14320,16 @@ react-dom@^16.4.2:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.11.2"
+
+react-dom@^16.7.0-alpha.2:
+  version "16.7.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.7.0-alpha.2.tgz#16632880ed43676315991d8b412cce6975a30282"
+  integrity sha512-o0mMw8jBlwHjGZEy/vvKd/6giAX0+skREMOTs3/QHmgi+yAhUClp4My4Z9lsKy3SXV+03uPdm1l/QM7NTcGuMw==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.12.0-alpha.2"
 
 react-emotion@^9.1.1:
   version "9.2.12"
@@ -17130,6 +17140,11 @@ utility-types@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/utility-types/-/utility-types-2.1.0.tgz#0c78fc9f7eb424d14302222b4ddd13fdb17f44ab"
   integrity sha512-/nP2gqavggo6l38rtQI/CdeV+2fmBGXVvHgj9kV2MAnms3TIi77Mz9BtapPFI0+GZQCqqom0vACQ+VlTTaCovw==
+
+utility-types@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/utility-types/-/utility-types-3.0.0.tgz#4d0dd8cd460da3dddecbe42568053bd1f6c1a740"
+  integrity sha512-eAv4GYXof9UbugNjhfybnpjtIq7xLgs1XgDgjE1UTFmojqhd5qK5m7RPSynWxQtuMt3JvVnsXzGR+2Jh1ey3xg==
 
 utils-merge@1.0.1:
   version "1.0.1"

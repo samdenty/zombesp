@@ -1,3 +1,11 @@
+# TODO:
+
+- Need to make everything use circular references.
+  - Zombie -> directConnection -> zombies -> Zombie etc.
+  - Should make it work in both graphql-db, db & browser-db
+
+# Spec
+
 Zombie
 
 - Connection

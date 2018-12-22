@@ -1,30 +1,27 @@
-import React from 'react'
+import * as React from 'react'
 import { Hook, Console, Decode } from 'console-feed'
-import { onMount } from '../lib'
 
 import { Link } from 'gatsby'
 
 import Layout from '../components/layout'
-import Image from '../components/image'
+import { Zombie } from '../components/Zombie'
 
 class IndexPage extends React.Component {
   state = {
-    test: false,
     logs: [],
   }
 
   componentDidMount() {
-    setTimeout(() => this.setState({ test: true }), 1000)
     // Hook(window.console, log => {
     //   this.setState(({ logs }) => ({ logs: [...logs, Decode(log)] }))
     // })
-
-    onMount()
   }
 
   render() {
     return (
       <Layout>
+        <Zombie id="test" />
+
         <div style={{ backgroundColor: '#292929' }}>
           <Console logs={this.state.logs} variant="dark" />
         </div>
