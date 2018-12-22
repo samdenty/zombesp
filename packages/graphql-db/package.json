@@ -12,6 +12,8 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@esprat/db": "0.0.0"
+  },
   "devDependencies": {}
 }

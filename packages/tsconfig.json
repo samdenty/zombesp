@@ -2,8 +2,12 @@
   "files": [],
   "references": [
     { "path": "db" },
-    { "path": "sdk" },
+
     { "path": "browser-db" },
+    { "path": "graphql-db" },
+
+    { "path": "sdk" },
+
     { "path": "keyboard" },
     { "path": "espcom" }
   ]

@@ -1,7 +1,10 @@
-import { Entity, PrimaryColumn, ManyToMany } from 'typeorm'
-import { Zombie } from '../Zombie'
+import { Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { InterfaceType, Field } from 'type-graphql'
 
+@InterfaceType()
 @Entity()
 export abstract class Connection {
-  @PrimaryColumn() id: string
+  @Field()
+  @PrimaryGeneratedColumn()
+  id: number
 }

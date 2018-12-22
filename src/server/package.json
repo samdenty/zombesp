@@ -3,8 +3,20 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "generate": "graphqlgen"
+  },
   "dependencies": {
+    "@esprat/db": "0.0.0",
     "@types/mosca": "^2.8.1",
-    "mosca": "^2.8.3"
+    "apollo-server": "^2.3.1",
+    "graphql": "^14.0.2",
+    "mosca": "^2.8.3",
+    "type-graphql": "^0.15.0",
+    "typedi": "^0.8.0"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.0.3",
+    "pg": "^7.7.1"
   }
 }

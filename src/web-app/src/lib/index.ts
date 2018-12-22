@@ -1,6 +1,8 @@
 import * as orm from 'typeorm'
-import * as bSdk from '@esprat/browser-db'
+import * as bDb from '@esprat/browser-db'
 import { BrowserDatabase } from '@esprat/browser-db'
+import { SDK } from '@esprat/sdk'
+import { cache } from './apollo'
 // import { ESPCom, DirectConnection, CloudConnection } from '@esprat/espcom'
 
 // const d = new DirectConnection('ws://192.168.1.102:81')
@@ -13,19 +15,21 @@ import { BrowserDatabase } from '@esprat/browser-db'
 
 // c.emit('hello', 'world')
 
-Object.entries({ ...orm, ...bSdk }).forEach(([key, value]) => {
+export async function onMount() {
+  const db = new BrowserDatabase()
+  ;(window as any).db = db
+  ;(cache as any).db = db
+
+  await db.connect({ logging: ['query', 'schema'] })
+
+  const sdk = new SDK(db)
+  ;(window as any).sdk = sdk
+
+  console.log(db, sdk)
+}
+
+Object.entries({ ...orm, ...bDb }).forEach(([key, value]) => {
   if (!window[key]) {
     window[key] = value
   }
 })
-
-export async function onMount() {
-  const sdk = new BrowserDatabase()
-  ;(window as any).sdk = sdk
-
-  await sdk.connect({
-    logging: ['query', 'schema'],
-  })
-
-  console.log(sdk)
-}

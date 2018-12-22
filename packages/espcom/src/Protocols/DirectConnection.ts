@@ -13,8 +13,6 @@ export class DirectConnection implements Protocol {
   public websocket: WebSocket
 
   constructor(private websocketAddress: string) {
-    this.connect()
-
     this.on('ack', (_, res) => {
       const req = this.requests.find(req => req.id === res.id)
 
@@ -26,9 +24,12 @@ export class DirectConnection implements Protocol {
   }
 
   public connect() {
+    if (this.isConnected()) return Promise.resolve()
+    this.disconnect()
+
     this.websocket = new WebSocket(this.websocketAddress)
 
-    return new Promise<any>(resolve => {
+    return new Promise<void>(resolve => {
       this.websocket.onmessage = this.onMessage
 
       this.websocket.onopen = () => {
@@ -49,6 +50,12 @@ export class DirectConnection implements Protocol {
     this.websocket.onclose = null
     this.websocket.onmessage = null
     this.websocket.close()
+
+    this.websocket = null
+  }
+
+  public isConnected() {
+    return this.websocket ? this.websocket.readyState === WebSocket.OPEN : false
   }
 
   public async emit(topic: string, data: any) {
@@ -57,7 +64,7 @@ export class DirectConnection implements Protocol {
 
     const payload = req.serialize()
 
-    if (this.websocket.readyState === this.websocket.OPEN) {
+    if (this.isConnected()) {
       this.websocket.send(payload)
     } else {
       this.buffer.add(payload)

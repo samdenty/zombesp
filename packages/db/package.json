@@ -12,6 +12,7 @@
     "build": "yarn tsc"
   },
   "dependencies": {
+    "type-graphql": "^0.15.0",
     "typeorm": "^0.2.9",
     "utility-types": "^2.1.0"
   },

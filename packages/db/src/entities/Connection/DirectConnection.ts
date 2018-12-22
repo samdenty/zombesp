@@ -1,14 +1,18 @@
 import { Connection } from './Connection'
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm'
 import { Zombie } from '../Zombie'
+import { ObjectType, Field } from 'type-graphql'
 
 @Entity()
+@ObjectType({ implements: Connection })
 export class DirectConnection extends Connection {
+  @Field(type => Zombie)
   @ManyToOne(type => Zombie, zombie => zombie.directConnections, {
-    nullable: true,
+    onDelete: 'CASCADE',
   })
-  zombie?: Zombie
+  zombie: Zombie
 
-  @Column() address: string
-  @Column() port: number
+  @Field()
+  @Column()
+  address: string
 }

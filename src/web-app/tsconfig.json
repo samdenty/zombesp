@@ -1,12 +1,11 @@
 {
-  "extends": "../tsconfig.settings.json",
+  "extends": "../../packages/tsconfig.settings.json",
   "compilerOptions": {
     "module": "esnext",
     "target": "es2018",
     "allowJs": true,
     "skipLibCheck": false,
     "allowSyntheticDefaultImports": true,
-    "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve"
   },

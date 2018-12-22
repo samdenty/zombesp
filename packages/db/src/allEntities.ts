@@ -1,5 +1,5 @@
-import { getMetadataArgsStorage } from 'typeorm'
 import * as entitiesExports from './entities'
+import { getMetadataArgsStorage } from 'typeorm'
 
 const argsStorage = getMetadataArgsStorage()
 

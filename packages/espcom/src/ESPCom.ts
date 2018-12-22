@@ -9,7 +9,17 @@ type EmitOptions = {
 }
 
 export class ESPCom {
-  constructor(public protocols: Protocol[]) {}
+  constructor(public protocols: Protocol[]) {
+    this.connect()
+  }
+
+  public async connect() {
+    for (const protocol of this.protocols) {
+      // try {
+      protocol.connect()
+      // }
+    }
+  }
 
   public async emit(
     topic: string,

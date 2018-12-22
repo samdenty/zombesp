@@ -1,19 +1,26 @@
 import { Connection } from './Connection'
 import { Entity, Column, OneToMany } from 'typeorm'
 import { Zombie } from '../Zombie'
+import { ObjectType, Field } from 'type-graphql'
 
 @Entity()
+@ObjectType({ implements: Connection })
 export class MQTTConnection extends Connection {
-  @OneToMany(type => Zombie, zombie => zombie.mqttConnection)
+  @Field(type => Zombie)
+  @OneToMany(type => Zombie, zombie => zombie.mqttConnection, {
+    onDelete: 'SET NULL',
+  })
   zombies: Zombie[]
 
-  @Column() address: string
+  @Field()
+  @Column()
+  address: string
 
-  @Column() port: number
-
+  @Field({ nullable: true })
   @Column({ nullable: true })
   username?: string
 
+  @Field({ nullable: true })
   @Column({ nullable: true })
   password?: string
 }

@@ -19,9 +19,12 @@ export class CloudConnection implements Partial<Protocol> {
   private requests = new Array<Req>()
   private client: MqttClient
 
-  constructor(private mqttAddress: string, private deviceId: string) {
-    this.connect()
-
+  constructor(
+    private mqttAddress: string,
+    private deviceId: string,
+    private username?: string,
+    private password?: string
+  ) {
     this.on('ack', (_, res) => {
       const req = this.requests.find(req => req.id === res.id)
 
@@ -32,9 +35,18 @@ export class CloudConnection implements Partial<Protocol> {
     })
   }
 
-  public async connect() {
+  public connect() {
+    if (this.isConnected()) return Promise.resolve()
+    this.disconnect()
+
     if (!CloudConnection.sharedClient.has(this.mqttAddress)) {
-      const client = mqtt.connect(this.mqttAddress)
+      const client = mqtt.connect(
+        this.mqttAddress,
+        {
+          username: this.username,
+          password: this.password,
+        }
+      )
 
       CloudConnection.sharedClient.set(this.mqttAddress, {
         connections: 0,
@@ -47,6 +59,14 @@ export class CloudConnection implements Partial<Protocol> {
     this.client = sharedClient.client
     this.client.on('message', this.onMessage)
     sharedClient.connections++
+
+    return new Promise<void>(resolve => {
+      const onConnect = () => {
+        this.client.off('connect', onConnect)
+        resolve()
+      }
+      this.client.on('connect', onConnect)
+    })
   }
 
   public async disconnect() {
@@ -63,6 +83,12 @@ export class CloudConnection implements Partial<Protocol> {
         CloudConnection.sharedClient.delete(this.mqttAddress)
       }
     }
+
+    this.client = null
+  }
+
+  public isConnected() {
+    return this.client ? this.client.connected : false
   }
 
   public async emit(topic: string, data: any) {

@@ -4,6 +4,8 @@ export interface Protocol {
   emit(topic: string, payload: any): Promise<Response>
   on(topic: string, callback: (data: any, res?: any) => void): () => void
 
+  isConnected(): boolean
+
   connect(): Promise<void>
   disconnect(): Promise<void>
 }
