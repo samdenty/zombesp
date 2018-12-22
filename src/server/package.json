@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "generate": "graphqlgen"
+    "generate": "graphqlgen",
+    "start": "ts-node src"
   },
   "dependencies": {
     "@esprat/db": "0.0.0",

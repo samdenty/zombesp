@@ -14,14 +14,17 @@ export interface IDatabase {
     address: string
   ): Promise<DirectConnection>
   removeDirectConnection(zombieId: string, id: string): Promise<boolean>
+  getDirectConnection(id: string): Promise<DirectConnection>
+  getDirectConnections(zombieId?: string): Promise<DirectConnection[]>
 
   createMQTTConnection(
     address: string,
     auth?: { username: string; password?: string }
   ): Promise<MQTTConnection>
   deleteMQTTConnection(id: number): Promise<boolean>
-
-  setMQTTConnection(zombieId: string, id?: number): Promise<Zombie>
+  getMQTTConnection(id: string): Promise<MQTTConnection>
+  getMQTTConnections(): Promise<MQTTConnection[]>
+  setMQTTConnection(zombieId: string, id?: number): Promise<MQTTConnection>
 }
 
 export class Database implements IDatabase {
@@ -92,6 +95,19 @@ export class Database implements IDatabase {
     return !!affected
   }
 
+  public async getDirectConnection(id: string) {
+    const connection = await this.directConnectionRepo.findOne({ id })
+    return connection
+  }
+
+  public async getDirectConnections(zombieId?: string) {
+    const connections = await this.directConnectionRepo.find({
+      ...(zombieId && { zombie: { id: zombieId } }),
+    })
+
+    return connections
+  }
+
   public async createMQTTConnection(
     address: string,
     { username, password }: { username: string; password?: string } = {} as any
@@ -124,6 +140,8 @@ export class Database implements IDatabase {
       zombie.mqttConnection = null
     }
 
-    return await this.connection.manager.save(zombie)
+    const result = await this.connection.manager.save(zombie)
+
+    return result.mqttConnection
   }
 }

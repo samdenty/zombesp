@@ -1,0 +1,11 @@
+{
+  "name": "@esprat/scripts",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "apollo-index-generator": "./src/apollo-index-generator.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}

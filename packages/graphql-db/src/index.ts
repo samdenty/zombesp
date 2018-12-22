@@ -1,1 +1,1 @@
-export * from './GraphQLDB'
+export * from './GraphQLDatabase'

@@ -7,7 +7,7 @@ async function bootstrap() {
   const database = new Database()
 
   const [schema] = await Promise.all([
-    TypeGraphQL.buildSchema({ resolvers }),
+    TypeGraphQL.buildSchema({ resolvers, emitSchemaFile: true }),
     database.connect({
       type: 'postgres',
       url:

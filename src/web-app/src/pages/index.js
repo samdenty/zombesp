@@ -1,6 +1,4 @@
 import React from 'react'
-import gql from 'graphql-tag'
-import { Query } from 'react-apollo'
 import { Hook, Console, Decode } from 'console-feed'
 import { onMount } from '../lib'
 
@@ -8,18 +6,6 @@ import { Link } from 'gatsby'
 
 import Layout from '../components/layout'
 import Image from '../components/image'
-
-const t = gql`
-  query {
-    getZombie(id: 1) @client {
-      id
-      directConnections {
-        id
-        address
-      }
-    }
-  }
-`
 
 class IndexPage extends React.Component {
   state = {
@@ -39,14 +25,6 @@ class IndexPage extends React.Component {
   render() {
     return (
       <Layout>
-        {this.state.test && (
-          <Query query={t}>
-            {data => {
-              console.log(data)
-              return null
-            }}
-          </Query>
-        )}
         <div style={{ backgroundColor: '#292929' }}>
           <Console logs={this.state.logs} variant="dark" />
         </div>

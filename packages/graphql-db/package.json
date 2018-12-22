@@ -7,13 +7,18 @@
   "scripts": {
     "tsc": "rm -rf lib; tsc",
     "watch": "yarn tsc -w",
+    "codegen": "apollo codegen:generate --schema ../../src/server/schema.gql --target=typescript --outputFlat src/__generated; ../scripts/src/apollo-index-generator.ts",
     "build": "yarn tsc"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@esprat/db": "0.0.0"
+    "@esprat/db": "0.0.0",
+    "apollo-boost": "^0.1.23",
+    "class-transformer": "^0.2.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "apollo": "^1.9.2"
+  }
 }

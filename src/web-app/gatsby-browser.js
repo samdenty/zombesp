@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import * as React from 'react'
 import { client } from './src/lib/apollo'
 import { ApolloProvider } from 'react-apollo'

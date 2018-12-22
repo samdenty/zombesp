@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { InterfaceType, Field } from 'type-graphql'
+import { InterfaceType, Field, ID } from 'type-graphql'
 
 @InterfaceType()
 @Entity()
 export abstract class Connection {
-  @Field()
+  @Field(type => ID)
   @PrimaryGeneratedColumn()
   id: number
 }

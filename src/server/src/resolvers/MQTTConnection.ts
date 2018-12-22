@@ -18,18 +18,19 @@ export class MQTTConnectionResolver {
 
   @Mutation(type => Boolean)
   async deleteMQTTConnection(
-    @Arg('id') id: number,
+    @Arg('id', type => ID)
+    id: number,
     @Ctx() { database }: Context
   ) {
     const result = await database.deleteMQTTConnection(id)
     return result
   }
 
-  @Mutation(type => Boolean)
+  @Mutation(type => MQTTConnection)
   async setMQTTConnection(
     @Arg('zombieId', type => ID)
     zombieId: string,
-    @Arg('id', { nullable: true })
+    @Arg('id', type => ID, { nullable: true })
     id: number,
     @Ctx() { database }: Context
   ) {

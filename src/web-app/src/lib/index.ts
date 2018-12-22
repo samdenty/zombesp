@@ -1,8 +1,8 @@
 import * as orm from 'typeorm'
 import * as bDb from '@esprat/browser-db'
 import { BrowserDatabase } from '@esprat/browser-db'
+import { GraphQLDatabase } from '@esprat/graphql-db'
 import { SDK } from '@esprat/sdk'
-import { cache } from './apollo'
 // import { ESPCom, DirectConnection, CloudConnection } from '@esprat/espcom'
 
 // const d = new DirectConnection('ws://192.168.1.102:81')
@@ -16,9 +16,10 @@ import { cache } from './apollo'
 // c.emit('hello', 'world')
 
 export async function onMount() {
+  const rdb = new GraphQLDatabase('http://localhost:4000')
   const db = new BrowserDatabase()
   ;(window as any).db = db
-  ;(cache as any).db = db
+  ;(window as any).rdb = rdb
 
   await db.connect({ logging: ['query', 'schema'] })
 

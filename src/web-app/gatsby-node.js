@@ -1,3 +1,4 @@
+const path = require('path')
 const webpack = require('webpack')
 
 /**
@@ -20,6 +21,15 @@ exports.onCreateWebpackConfig = ({
     plugins: [
       new webpack.NormalModuleReplacementPlugin(/typeorm$/, function(result) {
         result.request = result.request.replace(/typeorm/, 'typeorm/browser')
+      }),
+      new webpack.NormalModuleReplacementPlugin(/type-graphql$/, function(
+        result
+      ) {
+        result.request = result.request.replace(
+          /type-graphql/,
+          // @TODO https://github.com/19majkel94/type-graphql/pull/216
+          path.resolve(__dirname, './scripts/shims/type-graphql.js')
+        )
       }),
       new webpack.ProvidePlugin({
         'window.SQL': 'sql.js/js/sql.js',

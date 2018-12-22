@@ -13,7 +13,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "escape-string-regexp": "^1.0.5",
     "mqtt": "^2.18.8"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/escape-string-regexp": "^1.0.0"
+  }
 }
