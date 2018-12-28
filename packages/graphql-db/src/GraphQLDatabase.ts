@@ -1,5 +1,7 @@
 import { plainToClass } from 'class-transformer'
-import ApolloClient from 'apollo-boost'
+import { ApolloClient } from 'apollo-client'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { HttpLink } from 'apollo-link-http'
 import { IDatabase, Zombie, DirectConnection, MQTTConnection } from '@esprat/db'
 import * as Types from './__generated'
 import * as Queries from './queries'
@@ -8,7 +10,17 @@ export class GraphQLDatabase implements IDatabase {
   private client: ApolloClient<any>
 
   public connect(uri: string) {
-    this.client = new ApolloClient({ uri })
+    const cache = new InMemoryCache()
+
+    this.client = new ApolloClient({
+      link: new HttpLink({ uri }),
+      defaultOptions: {
+        query: {
+          fetchPolicy: 'network-only',
+        },
+      },
+      cache,
+    })
   }
 
   public isConnected() {

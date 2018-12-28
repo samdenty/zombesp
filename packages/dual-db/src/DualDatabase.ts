@@ -1,6 +1,9 @@
 import { IDatabase } from '@esprat/db'
 import { Overwrite } from 'utility-types'
 
+// How long to wait before retrying a method
+const RETRY_TIME = 200
+
 export class DualDatabase<Master extends IDatabase, Replica extends IDatabase> {
   public virtualDatabase: Overwrite<Replica, Master>
 
@@ -33,38 +36,87 @@ export class DualDatabase<Master extends IDatabase, Replica extends IDatabase> {
     this.commits.add({ method, args })
   }
 
-  private getMethod(method: string) {
+  private getMethod(method: string, retry = true) {
     const supportedOnMaster = method in this.masterDb
     const supportedOnReplica = method in this.masterDb
 
     if (supportedOnMaster || supportedOnReplica) {
       if (supportedOnMaster) {
         if (this.masterDb.isConnected()) {
-          console.log('serving from master')
+          // Serve from master
           return this.masterDb[method]
         }
-        console.log('supported on master, but not connected')
+        // Supported on master, but not connected
       }
 
       if (supportedOnReplica) {
-        if (this.replicaDb.isConnected()) {
-          console.log('serving from fallback')
+        const canProvideOptimisticResponse =
+          typeof this.replicaDb[method] === 'function'
 
-          if (supportedOnMaster) {
-            // Need to replicate on master
-            if (typeof this.replicaDb[method] === 'function') {
-              return (...args) => {
-                this.commitMasterTask(method, args)
-                return this.replicaDb[method](...args)
-              }
+        if (this.replicaDb.isConnected()) {
+          if (supportedOnMaster && canProvideOptimisticResponse) {
+            // Serve from fallback + commit to master
+            return (...args) => {
+              this.commitMasterTask(method, args)
+              return this.replicaDb[method](...args)
             }
           }
 
+          // Serve from fallback
           return this.replicaDb[method]
         }
-        console.log('supported on fallback, but not connected')
+
+        // Supported on fallback, but not connected
+        if (retry && canProvideOptimisticResponse) {
+          // Return a promise, which will later be resolved / rejected
+          // when database is available
+          return (...args) =>
+            new Promise((resolve, reject) => {
+              this.commitMasterTask(method, args)
+
+              const retry = () => {
+                // Try and recurse
+                try {
+                  var func = this.getMethod(method, false)
+                } catch (e) {
+                  return retryInFuture()
+                }
+
+                if (typeof func !== 'function')
+                  return reject(
+                    new Error(
+                      `Expected "${method}" to be typeof Function, got "${typeof func}"`
+                    )
+                  )
+
+                // Successfully retried
+                try {
+                  const promise = func(...args)
+
+                  if (!(promise instanceof Promise))
+                    return reject(
+                      new Error(
+                        `Expected result of "${method}" to be a promise, got "${typeof func}"`
+                      )
+                    )
+
+                  promise.then(resolve).catch(reject)
+                } catch (e) {
+                  reject(e)
+                }
+              }
+
+              const retryInFuture = () => setTimeout(retry, RETRY_TIME)
+              retryInFuture()
+            })
+        }
       }
+
+      throw new Error(
+        `Can't provide a optimistic response for "${method}" database call!`
+      )
     }
+
     return undefined
   }
 }

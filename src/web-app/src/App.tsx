@@ -10,13 +10,18 @@ import { GraphQLDatabase } from '@esprat/graphql-db'
 const remoteDb = new GraphQLDatabase()
 const localDb = new BrowserDatabase()
 
+remoteDb.connect('http://localhost:4000')
 localDb.connect()
-// remoteDb.connect('http://localhost:4000')
 
 const dualDb = new DualDatabase(remoteDb, localDb)
 const sdk = new SDK(dualDb.virtualDatabase)
-
+// ;(async () => {
+//   await sdk.fetchDirectConnections()
+//   await sdk.fetchZombies()
+// })()
+// sdk.fetchMqttConnections()
 //
+;(window as any).sdk = sdk
 ;(window as any).dualDb = dualDb
 ;(window as any).remoteDb = remoteDb
 ;(window as any).localDb = localDb

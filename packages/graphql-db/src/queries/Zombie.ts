@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const ZOMBIE_INTROSPECTION = gql`
   fragment ZombieIntrospection on Zombie {

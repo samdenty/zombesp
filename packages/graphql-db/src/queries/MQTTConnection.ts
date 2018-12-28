@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const MQTT_CONNECTION_INTROSPECTION = gql`
   fragment MQTTConnectionIntrospection on MQTTConnection {

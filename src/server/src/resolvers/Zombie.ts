@@ -69,6 +69,6 @@ export class ZombieResolver {
       // })
     }
 
-    return root.directConnections
+    return root.mqttConnection
   }
 }

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const DIRECT_CONNECTION_INTROSPECTION = gql`
   fragment DirectConnectionIntrospection on DirectConnection {

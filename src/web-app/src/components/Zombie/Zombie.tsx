@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { observer } from 'mobx-react-lite'
 import { useContext } from 'react'
 import { SDKContext } from '../SDKContext'
 
@@ -6,9 +7,13 @@ export interface ZombieProps {
   id: string
 }
 
-export function Zombie({ id }: ZombieProps) {
-  console.log(useContext)
+export const Zombie = observer(({ id }: ZombieProps) => {
   const sdk = useContext(SDKContext)
+  const zombie = sdk.zombies.get(id)
 
-  return <div>rawr {id}</div>
-}
+  return (
+    <div>
+      {zombie.id}: {zombie.directConnections.length}
+    </div>
+  )
+})

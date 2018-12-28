@@ -13,6 +13,10 @@ export class ESPCom {
     this.connect()
   }
 
+  public async isConnected() {
+    return false
+  }
+
   public async connect() {
     for (const protocol of this.protocols) {
       // try {
