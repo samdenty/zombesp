@@ -25,6 +25,7 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
     // Remove deleted zombies
     for (const [, zombie] of this.zombies) {
       if (!zombies.find(({ id }) => id === zombie.id)) {
+        zombie.dispose()
         this.zombies.delete(zombie.id)
       }
     }
@@ -33,26 +34,15 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
   }
 
   private updateZombie(data: DB.Zombie) {
-    const zombie = this.zombies.get(data.id) || new Zombie()
-    Object.assign(zombie, data)
+    const zombie = this.zombies.get(data.id) || new Zombie(this)
+    delete data['directConnections']
 
-    // Link direct connections
-    const directConnections = data.directConnections
-      .map(({ id }) => this.directConnections.get(id))
-      .filter(Boolean)
-    directConnections.forEach(
-      directConnection => (directConnection.zombie = zombie)
-    )
-    zombie.directConnections = directConnections
+    Object.assign(zombie, data)
 
     // Link MQTT
     const mqttConnection = this.mqttConnections.get(
       data.mqttConnection && data.mqttConnection.id
     )
-    if (mqttConnection) {
-      // @TODO: Add non-duplication logic
-      mqttConnection.zombies.push(zombie)
-    }
     zombie.mqttConnection = mqttConnection
 
     this.zombies.set(zombie.id, zombie)
@@ -64,6 +54,7 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
     // Remove deleted connections
     for (const [, mqttConnection] of this.mqttConnections) {
       if (!mqttConnections.find(({ id }) => id === mqttConnection.id)) {
+        mqttConnection.dispose()
         this.mqttConnections.delete(mqttConnection.id)
       }
     }
@@ -73,22 +64,16 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
 
   private updateMqttConnection(data: DB.MQTTConnection) {
     const mqttConnection =
-      this.mqttConnections.get(data.id) || new MQTTConnection()
+      this.mqttConnections.get(data.id) || new MQTTConnection(this)
+
+    for (const { id } of data.zombies) {
+      const zombie = this.zombies.get(id)
+
+      if (zombie) zombie.mqttConnection = mqttConnection
+    }
+
+    delete data['zombies']
     Object.assign(mqttConnection, data)
-
-    const zombies = data.zombies
-      .map(({ id }) => {
-        const zombie = this.zombies.get(id)
-
-        if (zombie) {
-          zombie.mqttConnection = mqttConnection
-        }
-
-        return zombie
-      })
-      .filter(Boolean)
-
-    mqttConnection.zombies = zombies
 
     this.mqttConnections.set(mqttConnection.id, mqttConnection)
   }
@@ -99,6 +84,7 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
     // Remove deleted connections
     for (const [, directConnection] of this.directConnections) {
       if (!directConnections.find(({ id }) => id === directConnection.id)) {
+        directConnection.dispose()
         this.directConnections.delete(directConnection.id)
       }
     }
@@ -112,11 +98,7 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
 
     Object.assign(directConnection, data)
 
-    const zombie = this.zombies.get(data.zombie.id)
-    if (zombie) {
-      // @TODO: Add non-duplication logic
-      zombie.directConnections.push(directConnection)
-    }
+    const zombie = data.zombie ? this.zombies.get(data.zombie.id) : null
     directConnection.zombie = zombie
 
     this.directConnections.set(directConnection.id, directConnection)

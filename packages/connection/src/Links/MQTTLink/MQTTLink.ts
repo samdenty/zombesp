@@ -1,12 +1,13 @@
-import mqtt, { MqttClient, Packet } from 'mqtt'
-import { Protocol } from '../../Protocol'
+import { connect, MqttClient, Packet } from 'mqtt'
+import { Link, BaseLink } from '../../Link'
 import {
+  createClientId,
   decodeStatusTopic,
   encodeCommandTopic,
   encodeStatusTopic,
 } from './utils'
 
-export class CloudConnection implements Partial<Protocol> {
+export class MQTTLink extends BaseLink implements Link {
   static sharedClient = new Map<
     string,
     { connections: number; client: MqttClient }
@@ -17,7 +18,8 @@ export class CloudConnection implements Partial<Protocol> {
     callback: (data: any, res: Res) => void
   }>()
   private requests = new Array<Req>()
-  private client: MqttClient
+
+  public client: MqttClient
 
   constructor(
     private mqttAddress: string,
@@ -25,6 +27,10 @@ export class CloudConnection implements Partial<Protocol> {
     private username?: string,
     private password?: string
   ) {
+    super()
+
+    this.connect()
+
     this.on('ack', (_, res) => {
       const req = this.requests.find(req => req.id === res.id)
 
@@ -36,59 +42,63 @@ export class CloudConnection implements Partial<Protocol> {
   }
 
   public connect() {
-    if (this.isConnected()) return Promise.resolve()
+    if (this.connected) return Promise.resolve()
     this.disconnect()
 
-    if (!CloudConnection.sharedClient.has(this.mqttAddress)) {
-      const client = mqtt.connect(
+    if (!MQTTLink.sharedClient.has(this.mqttAddress)) {
+      const client = connect(
         this.mqttAddress,
         {
           username: this.username,
           password: this.password,
+          clientId: createClientId(),
         }
       )
 
-      CloudConnection.sharedClient.set(this.mqttAddress, {
+      MQTTLink.sharedClient.set(this.mqttAddress, {
         connections: 0,
         client,
       })
     }
 
-    const sharedClient = CloudConnection.sharedClient.get(this.mqttAddress)
+    const sharedClient = MQTTLink.sharedClient.get(this.mqttAddress)
 
     this.client = sharedClient.client
     this.client.on('message', this.onMessage)
+    this.client.on('connect', this.onConnect)
+    this.client.on('close', this.onDisconnect)
     sharedClient.connections++
+
+    // onConnect won't be called from sharedClient
+    this.connected = this.client.connected
 
     return new Promise<void>(resolve => {
       const onConnect = () => {
-        this.client.off('connect', onConnect)
+        if (this.client) this.client.off('connect', onConnect)
         resolve()
       }
       this.client.on('connect', onConnect)
     })
   }
 
-  public async disconnect() {
+  public disconnect() {
     if (!this.client) return
 
     this.client.off('message', this.onMessage)
+    this.client.off('connect', this.onConnect)
+    this.client.off('close', this.onDisconnect)
 
-    const sharedClient = CloudConnection.sharedClient.get(this.mqttAddress)
+    const sharedClient = MQTTLink.sharedClient.get(this.mqttAddress)
     if (sharedClient) {
       sharedClient.connections--
 
       if (sharedClient.connections === 0) {
         this.client.end()
-        CloudConnection.sharedClient.delete(this.mqttAddress)
+        MQTTLink.sharedClient.delete(this.mqttAddress)
       }
     }
 
     this.client = null
-  }
-
-  public isConnected() {
-    return this.client ? this.client.connected : false
   }
 
   public async emit(topic: string, data: any) {
@@ -158,6 +168,14 @@ export class CloudConnection implements Partial<Protocol> {
         listener.callback(data, res)
       }
     })
+  }
+
+  private onConnect = () => {
+    this.connected = true
+  }
+
+  private onDisconnect = () => {
+    this.connected = false
   }
 }
 

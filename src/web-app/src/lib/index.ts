@@ -3,7 +3,7 @@ import * as bDb from '@esprat/browser-db'
 import { BrowserDatabase } from '@esprat/browser-db'
 import { GraphQLDatabase } from '@esprat/graphql-db'
 import { SDK } from '@esprat/sdk'
-// import { ESPCom, DirectConnection, CloudConnection } from '@esprat/espcom'
+// import { ESPCom, DirectConnection, CloudConnection } from '@esprat/connection'
 
 // const d = new DirectConnection('ws://192.168.1.102:81')
 // const c = new CloudConnection('mqtt://127.0.0.1:8080', 'testing')

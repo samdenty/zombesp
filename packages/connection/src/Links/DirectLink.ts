@@ -1,6 +1,6 @@
-import { Protocol } from '../Protocol'
+import { Link, BaseLink } from '../Link'
 
-export class DirectConnection implements Protocol {
+export class DirectLink extends BaseLink implements Link {
   private listeners = new Set<{
     topic: string
     callback: (data: any, res: Res) => void
@@ -13,6 +13,8 @@ export class DirectConnection implements Protocol {
   public websocket: WebSocket
 
   constructor(private websocketAddress: string) {
+    super()
+
     this.on('ack', (_, res) => {
       const req = this.requests.find(req => req.id === res.id)
 
@@ -24,7 +26,7 @@ export class DirectConnection implements Protocol {
   }
 
   public connect() {
-    if (this.isConnected()) return Promise.resolve()
+    if (this.connected) return Promise.resolve()
     this.disconnect()
 
     this.websocket = new WebSocket(this.websocketAddress)
@@ -33,17 +35,21 @@ export class DirectConnection implements Protocol {
       this.websocket.onmessage = this.onMessage
 
       this.websocket.onopen = () => {
+        this.connected = true
+
         this.buffer.forEach(payload => this.websocket.send(payload))
         this.buffer.clear()
+
         resolve()
       }
       this.websocket.onclose = () => {
+        this.connected = false
         this.connect()
       }
     })
   }
 
-  public async disconnect() {
+  public disconnect() {
     if (!this.websocket) return
 
     this.websocket.onopen = null
@@ -52,10 +58,7 @@ export class DirectConnection implements Protocol {
     this.websocket.close()
 
     this.websocket = null
-  }
-
-  public isConnected() {
-    return this.websocket ? this.websocket.readyState === WebSocket.OPEN : false
+    this.connected = false
   }
 
   public async emit(topic: string, data: any) {
@@ -64,7 +67,7 @@ export class DirectConnection implements Protocol {
 
     const payload = req.serialize()
 
-    if (this.isConnected()) {
+    if (this.connected) {
       this.websocket.send(payload)
     } else {
       this.buffer.add(payload)

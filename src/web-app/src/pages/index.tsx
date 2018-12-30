@@ -3,26 +3,16 @@ import { Hook, Console, Decode } from 'console-feed'
 
 import { Link } from 'gatsby'
 
-import Layout from '../components/layout'
-import { Zombie } from '../components/Zombie'
-import { useContext } from 'react'
-import { SDKContext } from '../components/SDKContext'
-import { Observer } from 'mobx-react-lite'
+import { Layout } from '../components/Layout'
+import { Zombies } from '../components/Zombies'
+import { useSDK } from '../hooks'
 
 export default function Index() {
-  const sdk = useContext(SDKContext)
+  const sdk = useSDK
 
   return (
     <Layout>
-      <Observer>
-        {() => (
-          <>
-            {Array.from(sdk.zombies).map(([, zombie]) => (
-              <Zombie id={zombie.id} key={zombie.id} />
-            ))}
-          </>
-        )}
-      </Observer>
+      <Zombies />
 
       {/* <div style={{ backgroundColor: '#292929' }}>
         <Console logs={this.state.logs} variant="dark" />

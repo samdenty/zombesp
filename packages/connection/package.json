@@ -1,5 +1,5 @@
 {
-  "name": "@esprat/espcom",
+  "name": "@esprat/connection",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
@@ -13,6 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "mobx": "^5.8.0",
     "escape-string-regexp": "^1.0.5",
     "mqtt": "^2.18.8"
   },

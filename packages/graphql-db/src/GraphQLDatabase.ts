@@ -24,7 +24,10 @@ export class GraphQLDatabase implements IDatabase {
   }
 
   public isConnected() {
-    return this.client ? true : false
+    // @TODO: Check if we're connected / can connect to the server
+    // otherwise this prevents dual-db from kicking in
+    // return this.client ? true : false
+    return false
   }
 
   public async getZombies() {

@@ -1,15 +1,13 @@
-import { Protocol } from './Protocol'
-
-type IESPComOptions = {
-  protocols: Protocol[]
-}
+import { Link } from './Link'
 
 type EmitOptions = {
   strategy: 'fallback' | 'race'
 }
 
-export class ESPCom {
-  constructor(public protocols: Protocol[]) {
+export class Connection {
+  public links = new Set<Link>()
+
+  constructor() {
     this.connect()
   }
 
@@ -18,7 +16,7 @@ export class ESPCom {
   }
 
   public async connect() {
-    for (const protocol of this.protocols) {
+    for (const protocol of this.links) {
       // try {
       protocol.connect()
       // }
@@ -33,7 +31,7 @@ export class ESPCom {
     if (strategy === 'fallback') {
       let lastError: Error
 
-      for (const protocol of this.protocols) {
+      for (const protocol of this.links) {
         try {
           return await protocol.emit(topic, payload)
         } catch (e) {
@@ -46,7 +44,7 @@ export class ESPCom {
 
     if (strategy === 'race') {
       return await Promise.race(
-        this.protocols.map(protocol => protocol.emit(topic, payload))
+        Array.from(this.links).map(protocol => protocol.emit(topic, payload))
       )
     }
   }
