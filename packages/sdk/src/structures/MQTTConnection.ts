@@ -1,7 +1,6 @@
 import { MQTTLink } from '@esprat/connection'
 import * as DB from '@esprat/db'
-import { Zombie } from './Zombie'
-import { observable, autorun, computed, reaction } from 'mobx'
+import { observable, computed } from 'mobx'
 import { SDK } from '../SDK'
 
 export class MQTTConnection extends DB.MQTTConnection {
@@ -9,8 +8,9 @@ export class MQTTConnection extends DB.MQTTConnection {
 
   @computed
   public get links() {
-    const links = observable.map<string, MQTTLink>()
-    this.zombies.forEach(({ id, mqttLink }) => links.set(id, mqttLink))
+    const links = observable.map(
+      this.zombies.map(({ id, mqttLink }): [string, MQTTLink] => [id, mqttLink])
+    )
     return links
   }
 
@@ -29,6 +29,6 @@ export class MQTTConnection extends DB.MQTTConnection {
 
   public dispose() {
     this.disposers.forEach(dispose => dispose())
-    this.links.forEach(link => link.disconnect())
+    this.links.forEach(link => link.dispose())
   }
 }

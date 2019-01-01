@@ -1,7 +1,13 @@
 import * as React from 'react'
 import { observer } from 'mobx-react-lite'
 import { useSDK } from '../../../hooks'
-import { StyledZombie, ZombieName, Section, SectionTitle } from './elements'
+import {
+  StyledZombie,
+  ZombieName,
+  Section,
+  SectionTitle,
+  ConnectionsSection,
+} from './elements'
 import { ZombieConnections } from '../../ZombieConnections'
 
 export interface ZombieProps {
@@ -20,20 +26,10 @@ export const Zombie = observer(({ id }: ZombieProps) => {
 
       <Section>Hello</Section>
 
-      <Section darker>
-        <SectionTitle>Status</SectionTitle>
-        <ZombieConnections id={id} />
-      </Section>
-
-      {zombie.directConnections.length}
-      <table>
-        {zombie.directConnections.map(directConnection => (
-          <tr>
-            <th>{directConnection.id}</th>
-            <th>{directConnection.address}</th>
-          </tr>
-        ))}
-      </table>
+      <ConnectionsSection>
+        <SectionTitle>Connections ({zombie.connectionCount})</SectionTitle>
+        <ZombieConnections zombie={zombie} max={2} />
+      </ConnectionsSection>
     </StyledZombie>
   )
 })

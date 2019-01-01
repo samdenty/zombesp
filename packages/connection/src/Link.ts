@@ -1,9 +1,24 @@
-import { observable } from 'mobx'
+import { observable, autorun, reaction } from 'mobx'
 
 type Response = any
 
 export class BaseLink {
-  @observable connected: boolean = false
+  private disposers: Function[]
+
+  constructor() {
+    this.disposers = [
+      autorun(() => {
+        if (this.connected) this.lastConnected = +new Date()
+      }),
+    ]
+  }
+
+  @observable public connected: boolean = false
+  @observable public lastConnected: number = null
+
+  public dispose() {
+    this.disposers.forEach(dispose => dispose)
+  }
 }
 
 export interface Link extends BaseLink {

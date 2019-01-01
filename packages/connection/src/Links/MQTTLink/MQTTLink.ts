@@ -73,11 +73,7 @@ export class MQTTLink extends BaseLink implements Link {
     this.connected = this.client.connected
 
     return new Promise<void>(resolve => {
-      const onConnect = () => {
-        if (this.client) this.client.off('connect', onConnect)
-        resolve()
-      }
-      this.client.on('connect', onConnect)
+      this.client.once('connect', resolve)
     })
   }
 
@@ -138,6 +134,11 @@ export class MQTTLink extends BaseLink implements Link {
 
       if (noMoreSubscriptions) this.client.unsubscribe(mqttTopic)
     }
+  }
+
+  public dispose() {
+    super.dispose()
+    this.disconnect()
   }
 
   private onMessage = (mqttTopic: string, payload: Buffer, packet: Packet) => {

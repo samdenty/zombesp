@@ -1,45 +1,79 @@
 import * as React from 'react'
-import { Connection, Root, Status, Info } from './elements'
-import { useSDK } from '../../hooks'
+import { Root, ShowMore } from './elements'
 import { observer } from 'mobx-react-lite'
-import { MQTTConnection } from '@esprat/sdk'
+import { Zombie, Link } from '@esprat/sdk'
+import posed, { PoseGroup } from 'react-pose'
+import { Connection } from './Connection'
+import { useState } from 'react'
+import { MdExpandLess, MdExpandMore } from 'react-icons/md'
 
 export interface ZombieConnectionsProps {
-  id: string
+  zombie: Zombie
+  max?: number
 }
 
-export const ZombieConnections = observer(({ id }: ZombieConnectionsProps) => {
-  const sdk = useSDK()
-  const zombie = sdk.zombies.get(id)
-
-  if (!zombie) return null
-
-  return (
-    <Root>
-      {zombie.directConnections /*.sort((a,b) => a.)*/
-        .map(({ id, address, link }) => (
-          <Connection key={id}>
-            <Status>{link.connected ? 'Connected' : 'Disconnected'}</Status>
-            <Info>
-              via direct <a href="#">{address}</a>
-            </Info>
-          </Connection>
-        ))}
-
-      {zombie.mqttConnection
-        ? (({ address, links }: MQTTConnection) => {
-            const link = links.get(zombie.id)
-
-            return (
-              <Connection>
-                <Status>{link.connected ? 'Connected' : 'Disconnected'}</Status>
-                <Info>
-                  via MQTT <a href="#">{address}</a>
-                </Info>
-              </Connection>
-            )
-          })(zombie.mqttConnection)
-        : null}
-    </Root>
-  )
+const Item = posed.div({
+  enter: {
+    x: 0,
+    height: 'auto',
+    opacity: 1,
+    delay: ({ i }) => i * 50,
+    transition: {
+      x: { type: 'spring', stiffness: 200 },
+      height: { duration: 100 },
+    },
+  },
+  exit: {
+    height: 0,
+    x: -30,
+    opacity: 0,
+    transition: { duration: 150 },
+  },
 })
+
+const sortLastConnected = (aLink: Link, bLink: Link) =>
+  aLink.lastConnected === bLink.lastConnected
+    ? 0
+    : aLink.lastConnected > bLink.lastConnected
+      ? -1
+      : 1
+
+const sortConnected = (aLink: Link, bLink: Link) =>
+  aLink.connected ? -1 : bLink.connected ? 1 : 0
+
+export const ZombieConnections = observer(
+  ({ zombie, max }: ZombieConnectionsProps) => {
+    const [showMore, setShowMore] = useState(false)
+
+    const connections = Array.from(zombie.links).sort(
+      ([, a], [, b]) => sortConnected(a, b) || sortLastConnected(a, b)
+    )
+
+    const visibleConnections = showMore
+      ? connections
+      : connections.slice(0, max)
+
+    return (
+      <Root>
+        <PoseGroup>
+          {visibleConnections.map(([connection, link], i) => (
+            <Item key={`${connection.constructor.name}-${connection.id}`} i={i}>
+              <Connection connection={connection} link={link} />
+            </Item>
+          ))}
+        </PoseGroup>
+
+        {connections.length > max && (
+          <ShowMore
+            onClick={() => setShowMore(!showMore)}
+            icon={showMore ? <MdExpandLess /> : <MdExpandMore />}
+          >
+            {showMore
+              ? `Show less`
+              : `Show more (${connections.length - visibleConnections.length})`}
+          </ShowMore>
+        )}
+      </Root>
+    )
+  }
+)

@@ -1,5 +1,5 @@
 import './utils/makeObservable'
-import { observable } from 'mobx'
+import { observable, computed } from 'mobx'
 import * as DB from '@esprat/db'
 
 import { Zombie, DirectConnection, MQTTConnection } from './structures'

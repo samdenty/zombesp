@@ -1,3 +1,5 @@
+require('events').EventEmitter.defaultMaxListeners = Infinity
+
 import * as React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import { client } from './lib/apollo'

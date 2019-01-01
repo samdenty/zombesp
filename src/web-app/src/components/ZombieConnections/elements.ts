@@ -1,16 +1,21 @@
 import styled from '@emotion/styled'
 import tw from 'tailwind.macro'
+import { Button, ButtonText, ButtonIcon } from '../Button'
 
-export const Root = styled('div')``
-
-export const Connection = styled('div')`
-  ${tw`py-2`};
+export const Root = styled('div')`
+  ${tw`flex flex-col`};
 `
 
-export const Status = styled('h4')`
-  ${tw`font-bold text-grey-darkest`};
-`
+export const ShowMore = styled(Button)`
+  ${tw`text-left bg-transparent text-xs uppercase`};
+  transition: all 0.2s ease;
 
-export const Info = styled('p')`
-  ${tw`text-grey-darker`};
+  &:hover {
+    background-color: rgba(51, 121, 210, 0.07);
+    ${tw`text-blue`};
+  }
+
+  ${ButtonText} {
+    ${tw`px-4 py-2`};
+  }
 `

@@ -85,6 +85,11 @@ export class DirectLink extends BaseLink implements Link {
     return () => this.listeners.delete(listener)
   }
 
+  public dispose() {
+    super.dispose()
+    this.disconnect()
+  }
+
   private onMessage = (message: MessageEvent) => {
     try {
       var [topic, id, data] = JSON.parse(message.data)

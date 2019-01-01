@@ -16,7 +16,7 @@ export class DirectConnection extends DB.DirectConnection {
       reaction(
         () => this.address,
         address => {
-          if (this.link) this.link.disconnect()
+          if (this.link) this.link.dispose()
           this.link = new DirectLink(address)
         }
       ),
@@ -25,6 +25,6 @@ export class DirectConnection extends DB.DirectConnection {
 
   public dispose() {
     this.disposers.forEach(dispose => dispose())
-    this.link.disconnect()
+    this.link.dispose()
   }
 }

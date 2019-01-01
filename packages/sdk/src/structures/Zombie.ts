@@ -1,6 +1,7 @@
 import * as DB from '@esprat/db'
-import { Connection, MQTTLink } from '@esprat/connection'
+import { Connection, MQTTLink, DirectLink } from '@esprat/connection'
 import { MQTTConnection } from './MQTTConnection'
+import { DirectConnection } from './DirectConnection'
 import { observable, autorun, computed, reaction } from 'mobx'
 import { SDK } from '../SDK'
 
@@ -16,6 +17,28 @@ export class Zombie extends DB.Zombie {
     return Array.from(this.sdk.directConnections.values()).filter(
       ({ zombie }) => zombie && zombie.id === this.id
     )
+  }
+
+  @computed
+  public get links(): Map<
+    DirectConnection | MQTTConnection,
+    DirectLink | MQTTLink
+  > {
+    return observable.map([
+      ...this.directConnections.map(connection => [
+        connection,
+        connection.link,
+      ]),
+      this.mqttConnection && [
+        this.mqttConnection,
+        this.mqttConnection.links.get(this.id),
+      ],
+    ].filter(Boolean) as any)
+  }
+
+  @computed
+  public get connectionCount() {
+    return +!!this.mqttConnection + this.directConnections.length
   }
 
   constructor(private sdk: SDK) {
@@ -42,7 +65,7 @@ export class Zombie extends DB.Zombie {
         () => {
           if (!this.mqttConnection) return null
 
-          if (this.mqttLink) this.mqttLink.disconnect()
+          if (this.mqttLink) this.mqttLink.dispose()
 
           this.mqttLink = new MQTTLink(
             this.mqttConnection.address,
