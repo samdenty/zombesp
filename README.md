@@ -4,7 +4,7 @@
 
 ## What is this project?
 
-This project is a web-based rubber-ducky remote-administration tool, designed to be undetectable with $2 of physical hardware. It can do 80% of what the Bash Bunny can.
+This project is a web-based rubber-ducky remote-administration tool, designed to be undetectable with $2 of physical hardware. It can do 80% of what the Bash Bunny can for 1/45th the cost.
 
 Other devices such as the [bash bunny](https://shop.hak5.org/products/bash-bunny) are expensive, and as they plug directly into the computer, they're easily found.
 
