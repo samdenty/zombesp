@@ -12019,10 +12019,22 @@ mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@0.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@
   dependencies:
     minimist "0.0.8"
 
+mobx-persist@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/mobx-persist/-/mobx-persist-0.4.1.tgz#fe5790eda04e0ee0b91c512d1347104e09363f9a"
+  integrity sha512-cPxVuZTY5neesxOV/Z25SF4+/NbC6wfHOe9HT5XoSEkAALNxNE41yDK48peJQ3iK14m0G2ywQRklCXeV3wftnQ==
+  dependencies:
+    serializr "^1.1.11"
+
 mobx-react-lite@^0.3.4:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-0.3.4.tgz#9b086c98c536a0b4a4f14fe373d80cb8d00de0fd"
   integrity sha512-8rW3Bk0HLp8rFqtJh5jM63PH5TVXsfNh1EE0zahmhjov1A1QqW1TbtP0GvdtUaDV3WTnCM3hThxsVP8FI5vG0w==
+
+mobx-utils@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/mobx-utils/-/mobx-utils-5.1.0.tgz#3a08f3bb004ca5f4331083763c07c7275e5989a5"
+  integrity sha512-ym9xPeW0UVNn5acrT3dTQXOu2L0+zxh0Z/TG9AFqnuI7VpCLZci09pfJG2uFggfQ9QT02Imh9h1KgxpchUgMcg==
 
 mobx@^5.8.0:
   version "5.8.0"
@@ -12034,7 +12046,7 @@ modify-values@^1.0.0:
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
 
-moment@^2.21.0:
+moment@^2.21.0, moment@^2.23.0:
   version "2.23.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.23.0.tgz#759ea491ac97d54bac5ad776996e2a58cc1bc225"
   integrity sha512-3IE39bHVqFbWWaPOMHZF98Q9c3LDKGTmypMiTM2QygGXXElkFWIH7GxfmlwmY2vwa+wmNsoYZmG2iusf1ZjJoA==
@@ -14757,6 +14769,11 @@ react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-moment@^0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/react-moment/-/react-moment-0.8.4.tgz#18eb59e1541c8b216353e23c21e9db50e42e2edb"
+  integrity sha512-QhI19OcfhiAn60/O6bMR0w8ApXrPFCjv6+eV0I/P9/AswzjgEAx4L7VxMBCpS/jrythLa12Q9v88req+ys4YpA==
+
 react-pose@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/react-pose/-/react-pose-4.0.4.tgz#c9072560d1d93d1baa0b75ff1e578e4a9cdeb13e"
@@ -15729,6 +15746,11 @@ serialize-javascript@^1.4.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-1.5.0.tgz#1aa336162c88a890ddad5384baebc93a655161fe"
   integrity sha512-Ga8c8NjAAp46Br4+0oZ2WxJCwIzwP60Gq1YPgU+39PiTVxyed/iKE/zyZI6+UlVYH5Q4PaQdHhcegIFPZTUfoQ==
+
+serializr@^1.1.11:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/serializr/-/serializr-1.3.0.tgz#6c7f977461d54a24bb1f17a03ed0ce61d239b010"
+  integrity sha1-bH+XdGHVSiS7HxegPtDOYdI5sBA=
 
 serve-index@^1.7.2:
   version "1.9.1"

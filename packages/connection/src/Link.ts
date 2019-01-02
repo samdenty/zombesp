@@ -1,9 +1,29 @@
-import { observable, autorun, reaction } from 'mobx'
+import { observable, autorun, computed } from 'mobx'
+import { persist } from 'mobx-persist'
+import { now } from 'mobx-utils'
 
 type Response = any
 
+const MAX_MS_UNTIL_OFFLINE = 5 * 1000
+
 export class BaseLink {
   private disposers: Function[]
+
+  @observable public connected: boolean = false
+  @persist
+  @observable
+  public lastConnected: number = null
+  @persist
+  @observable
+  public lastOnline: number = null
+
+  @computed
+  public get online() {
+    if (!this.connected || !this.lastOnline) return false
+    const msSinceLastOnline = now() - this.lastOnline
+
+    return msSinceLastOnline < MAX_MS_UNTIL_OFFLINE
+  }
 
   constructor() {
     this.disposers = [
@@ -12,9 +32,6 @@ export class BaseLink {
       }),
     ]
   }
-
-  @observable public connected: boolean = false
-  @observable public lastConnected: number = null
 
   public dispose() {
     this.disposers.forEach(dispose => dispose)

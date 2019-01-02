@@ -73,6 +73,11 @@ export class Zombie extends DB.Zombie {
             this.mqttConnection.username,
             this.mqttConnection.password
           )
+
+          this.sdk.hydrate(
+            this.mqttLink,
+            `${this.id}:${this.mqttConnection.id}`
+          )
         }
       ),
     ]

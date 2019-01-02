@@ -13,8 +13,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "mobx": "^5.8.0",
     "escape-string-regexp": "^1.0.5",
+    "mobx": "^5.8.0",
+    "mobx-persist": "^0.4.1",
+    "mobx-utils": "^5.1.0",
     "mqtt": "^2.18.8"
   },
   "devDependencies": {

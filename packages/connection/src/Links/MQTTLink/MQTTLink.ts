@@ -162,6 +162,8 @@ export class MQTTLink extends BaseLink implements Link {
       return
     }
 
+    this.lastOnline = +new Date()
+
     const res = new Res(id, data, packet)
 
     this.listeners.forEach(listener => {

@@ -22,11 +22,13 @@
     "gatsby-transformer-sharp": "^2.1.9",
     "graphql-tag": "^2.10.0",
     "mobx-react-lite": "^0.3.4",
+    "moment": "^2.23.0",
     "react": "^16.7.0-alpha.2",
     "react-apollo": "^2.3.3",
     "react-dom": "^16.7.0-alpha.2",
     "react-helmet": "^5.2.0",
     "react-icons": "^3.2.2",
+    "react-moment": "^0.8.4",
     "react-pose": "^4.0.4",
     "tailwind.macro": "^0.5.10",
     "tailwindcss": "^0.7.3"

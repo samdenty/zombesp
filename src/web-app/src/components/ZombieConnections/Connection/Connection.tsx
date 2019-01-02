@@ -1,6 +1,13 @@
 import * as React from 'react'
-import { Root, Status, Info } from './elements'
-import { useSDK } from '../../../hooks'
+import {
+  Root,
+  Status,
+  Info,
+  LastSeen,
+  OnlineIndicator,
+  OnlineStatus,
+} from './elements'
+import Moment from 'react-moment'
 import { observer } from 'mobx-react-lite'
 import {
   MQTTConnection,
@@ -15,15 +22,32 @@ export type ConnectionProps = {
 }
 
 export const Connection = observer(({ connection, link }: ConnectionProps) => {
-  // const sdk = useSDK()
-
   return (
     <Root>
       <Status>
-        {link.connected ? 'Connected' : 'Disconnected'} since
-        {+link.lastConnected}
+        <OnlineStatus>
+          <OnlineIndicator
+            pose={
+              link.online ? 'online' : link.connected ? 'connected' : 'offline'
+            }
+          />
+          {link.online ? 'Online' : link.connected ? 'Connecting' : 'Offline'}
+        </OnlineStatus>
+
+        {link.lastOnline && (
+          <LastSeen>
+            {`${link.online ? 'for' : 'last online'} `}
+            <Moment
+              date={link.lastOnline}
+              interval={500}
+              fromNow
+              ago={link.online}
+            />
+          </LastSeen>
+        )}
       </Status>
       <Info>
+        {connection.id}
         via {connection instanceof MQTTConnection ? 'MQTT' : 'Direct'}{' '}
         <a href="#">{connection.address}</a>
       </Info>

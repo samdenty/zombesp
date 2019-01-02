@@ -91,6 +91,8 @@ export class DirectLink extends BaseLink implements Link {
   }
 
   private onMessage = (message: MessageEvent) => {
+    this.lastOnline = +new Date()
+
     try {
       var [topic, id, data] = JSON.parse(message.data)
 

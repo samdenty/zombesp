@@ -13,9 +13,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@esprat/db": "0.0.0",
     "@esprat/connection": "1.0.0",
-    "mobx": "^5.8.0"
+    "@esprat/db": "0.0.0",
+    "mobx": "^5.8.0",
+    "mobx-persist": "^0.4.1"
   },
   "devDependencies": {}
 }

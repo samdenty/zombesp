@@ -1,15 +1,25 @@
 import './utils/makeObservable'
-import { observable, computed } from 'mobx'
+import { observable } from 'mobx'
+import { create, IHydrateResult } from 'mobx-persist'
 import * as DB from '@esprat/db'
 
 import { Zombie, DirectConnection, MQTTConnection } from './structures'
 
 export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
+  private hydrator: ReturnType<typeof create> = null
+
   @observable zombies = new Map<string, Zombie>()
   @observable mqttConnections = new Map<number, MQTTConnection>()
   @observable directConnections = new Map<number, DirectConnection>()
 
-  constructor(public database: Database) {}
+  constructor(
+    public database: Database,
+    public storage: Storage = typeof localStorage !== 'undefined'
+      ? localStorage
+      : null
+  ) {
+    this.hydrator = this.storage ? create({ storage: this.storage }) : null
+  }
 
   public async fetch() {
     await Promise.all([
@@ -94,7 +104,7 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
 
   private updateDirectConnection(data: DB.DirectConnection) {
     const directConnection =
-      this.directConnections.get(data.id) || new DirectConnection()
+      this.directConnections.get(data.id) || new DirectConnection(this)
 
     Object.assign(directConnection, data)
 
@@ -102,6 +112,39 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
     directConnection.zombie = zombie
 
     this.directConnections.set(directConnection.id, directConnection)
+  }
+
+  public hydrate<T extends Object>(
+    store: T,
+    key?: string | number
+  ): IHydrateResult<T> {
+    if (!this.hydrator) return
+
+    if (key) {
+      key = `#${key}`
+    } else {
+      if ('id' in store) {
+        const { id }: any = store
+
+        // Use generic id property on object
+        if (typeof id === 'string' || typeof id === 'number') {
+          key = `:${id}`
+        }
+      } else {
+        // Fallback to hash of implementation
+        if ('prototype' in store) {
+          key = `@${Object.getOwnPropertyNames((store as any).prototype).join(
+            ','
+          )}`
+        } else {
+          key = `~${Object.keys(store).join(',')}`
+        }
+      }
+    }
+
+    const token = `${store.constructor.name}${key}`
+
+    return this.hydrator(token, store)
   }
 
   // public async connectToZombie(id: string) {

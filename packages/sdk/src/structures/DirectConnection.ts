@@ -2,6 +2,7 @@ import * as DB from '@esprat/db'
 import { Zombie } from './Zombie'
 import { observable, reaction } from 'mobx'
 import { DirectLink } from '@esprat/connection'
+import { SDK } from '../SDK'
 
 export class DirectConnection extends DB.DirectConnection {
   private disposers: Function[]
@@ -9,7 +10,7 @@ export class DirectConnection extends DB.DirectConnection {
   @observable public link: DirectLink
   @observable public zombie: Zombie
 
-  constructor() {
+  constructor(private sdk: SDK) {
     super()
 
     this.disposers = [
@@ -18,6 +19,8 @@ export class DirectConnection extends DB.DirectConnection {
         address => {
           if (this.link) this.link.dispose()
           this.link = new DirectLink(address)
+
+          this.sdk.hydrate(this.link, this.id)
         }
       ),
     ]
