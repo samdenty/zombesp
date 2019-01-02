@@ -18,11 +18,19 @@ You communicate with the duckies through the JavaScript-based SDK. The SDK runs 
 
 You can write modules (in JavaScript), which can be executed inside a thread in your browser, or ran directly on Node.
 
+## Web interface
+
 The most powerful feature, is the Web interface (which works both offline / online).
  - When connected to a Node server, it uses to a MySQL/PostGres/SQLLite/MariaDB and runs scripts with full access to your filesystem.
  - When offline (or without a server), it creates a virtual-server inside your browser (complete with a filesystem, in-browser SQL database etc.)
    - If you later connect to a server, it can upload all the data stored in your browser to that server.
    - You can one-click download a server (database, filesystem etc.) into your browser.
+   
+The web interface uses the JavaScript SDK to provide a rich-interactive experience. Some examples:
+
+ - Input text into the target pc in realtime, using your keyboard inside browser
+ - Move the mouse on the target pc in realtime, using your mouse inside browser
+ - Explore & download files from the target pc with an easy-to-use file explorer
 
 ## TODO:
 
