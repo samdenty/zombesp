@@ -289,10 +289,10 @@ module.exports = {
   */
 
   leading: {
-    none: 1,
-    tight: 1.25,
-    normal: 1.5,
-    loose: 2,
+    none: '1rem',
+    tight: '1.25rem',
+    normal: '1.5rem',
+    loose: '2rem',
   },
 
   /*

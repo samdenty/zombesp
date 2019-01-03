@@ -23,7 +23,7 @@ export const Section = styled('section')`
 `
 
 export const SectionTitle = styled('h3')`
-  ${tw`my-0 text-xs text-grey-dark font-bold px-4 uppercase`};
+  ${tw`my-0 text-xs text-grey-dark font-bold px-4 uppercase pb-1`};
 `
 
 export const ConnectionsSection = styled(Section)`

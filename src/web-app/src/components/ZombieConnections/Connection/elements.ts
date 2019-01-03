@@ -1,23 +1,15 @@
-import { css } from '@emotion/core'
 import styled from '@emotion/styled'
 import tw from 'tailwind.macro'
 import posed from 'react-pose'
 
-export const Root = styled('div')`
-  ${tw`py-3 px-4`};
-`
-
-export const OnlineStatus = styled('div')`
-  ${tw`inline-flex`};
+export const StyledConnection = styled('div')`
+  ${tw`flex py-3 px-4 cursor-pointer`};
 `
 
 export const OnlineIndicator = styled(
   posed.div({
-    init: {
-      scale: 1,
-      boxShadow: '0px 0px 0px rgba(0,0,0,0)',
-    },
     connected: {
+      boxShadow: '0px 0px 0px rgba(0,0,0,0)',
       scale: 1.1,
       transition: {
         scale: {
@@ -27,13 +19,17 @@ export const OnlineIndicator = styled(
         },
       },
     },
-    offline: {},
+    offline: {
+      boxShadow: '0px 0px 0px rgba(0,0,0,0)',
+      scale: 1,
+    },
     online: {
+      scale: 1,
       boxShadow: '1px 1px 4px rgba(38, 241, 45, 0.1)',
     },
   })
 )<{ pose: 'online' | 'offline' | 'connected' }>`
-  ${tw`rounded-full h-font w-font flex-no-shrink mr-1`}
+  ${tw`rounded-full h-font w-font flex-no-shrink mr-2`}
 
   background: ${({ pose }) =>
     pose === 'connected'
@@ -43,14 +39,34 @@ export const OnlineIndicator = styled(
         : `rgba(0, 0, 0, 0.1)`}
 `
 
-export const Status = styled('h4')`
-  ${tw`font-bold text-grey-darkest`};
+export const Content = styled('div')`
+  ${tw`flex-grow`};
 `
 
-export const Info = styled('p')`
-  ${tw`text-grey-darker`};
+export const Header = styled('div')`
+  ${tw`flex flex-column leading-none`};
 `
 
-export const LastSeen = styled('span')`
-  ${tw`pl-2 font-normal text-grey-dark text-xs`};
+export const OnlineStatus = styled('span')`
+  ${tw`inline-flex`};
+`
+
+export const ConnectionInfo = styled('div')`
+  ${tw`text-sm flex-grow text-right text-grey`};
+`
+
+export const ConnectionType = styled('span')`
+  ${tw`font-medium uppercase`};
+`
+
+export const Address = styled('span')`
+  transition: all 0.2s ease;
+
+  ${StyledConnection}:hover & {
+    ${tw`text-blue underline`};
+  }
+`
+
+export const LastSeen = styled('div')`
+  ${tw`font-normal text-grey-dark text-xs mt-1`};
 `

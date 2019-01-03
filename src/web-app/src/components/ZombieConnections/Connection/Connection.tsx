@@ -1,11 +1,14 @@
 import * as React from 'react'
 import {
-  Root,
-  Status,
-  Info,
+  StyledConnection,
+  Address,
+  Header,
+  Content,
   LastSeen,
   OnlineIndicator,
   OnlineStatus,
+  ConnectionInfo,
+  ConnectionType,
 } from './elements'
 import Moment from 'react-moment'
 import { observer } from 'mobx-react-lite'
@@ -23,34 +26,45 @@ export type ConnectionProps = {
 
 export const Connection = observer(({ connection, link }: ConnectionProps) => {
   return (
-    <Root>
-      <Status>
-        <OnlineStatus>
-          <OnlineIndicator
-            pose={
-              link.online ? 'online' : link.connected ? 'connected' : 'offline'
-            }
-          />
-          {link.online ? 'Online' : link.connected ? 'Connecting' : 'Offline'}
-        </OnlineStatus>
+    <StyledConnection>
+      <OnlineIndicator
+        pose={link.online ? 'online' : link.connected ? 'connected' : 'offline'}
+      />
+
+      <Content>
+        <Header>
+          <OnlineStatus>
+            {link.online ? 'Online' : link.connected ? 'Pending' : 'Offline'}
+          </OnlineStatus>
+          <ConnectionInfo>
+            {/* <ConnectionType>
+              {connection instanceof MQTTConnection ? 'MQTT' : 'direct'}{' '}
+            </ConnectionType> */}
+
+            <Address>{connection.address}</Address>
+          </ConnectionInfo>
+        </Header>
 
         {link.lastOnline && (
           <LastSeen>
-            {`${link.online ? 'for' : 'last online'} `}
-            <Moment
-              date={link.lastOnline}
-              interval={500}
-              fromNow
-              ago={link.online}
-            />
+            {link.online ? (
+              <>
+                {`duration `}
+                <Moment
+                  date={link.startOnline}
+                  interval={1000}
+                  durationFromNow
+                />
+              </>
+            ) : (
+              <>
+                {`last online `}
+                <Moment date={link.lastOnline} interval={500} fromNow />
+              </>
+            )}
           </LastSeen>
         )}
-      </Status>
-      <Info>
-        {connection.id}
-        via {connection instanceof MQTTConnection ? 'MQTT' : 'Direct'}{' '}
-        <a href="#">{connection.address}</a>
-      </Info>
-    </Root>
+      </Content>
+    </StyledConnection>
   )
 })

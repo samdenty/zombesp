@@ -1,7 +1,12 @@
 import * as React from 'react'
 import { Root, ShowMore } from './elements'
 import { observer } from 'mobx-react-lite'
-import { Zombie, Link } from '@esprat/sdk'
+import {
+  Zombie,
+  sortLinkOnline,
+  sortLinkLastConnected,
+  sortLinkLastOnline,
+} from '@esprat/sdk'
 import posed, { PoseGroup } from 'react-pose'
 import { Connection } from './Connection'
 import { useState } from 'react'
@@ -31,22 +36,15 @@ const Item = posed.div({
   },
 })
 
-const sortLastConnected = (aLink: Link, bLink: Link) =>
-  aLink.lastConnected === bLink.lastConnected
-    ? 0
-    : aLink.lastConnected > bLink.lastConnected
-      ? -1
-      : 1
-
-const sortConnected = (aLink: Link, bLink: Link) =>
-  aLink.connected ? -1 : bLink.connected ? 1 : 0
-
 export const ZombieConnections = observer(
   ({ zombie, max }: ZombieConnectionsProps) => {
     const [showMore, setShowMore] = useState(false)
 
     const connections = Array.from(zombie.links).sort(
-      ([, a], [, b]) => sortConnected(a, b) || sortLastConnected(a, b)
+      ([, a], [, b]) =>
+        sortLinkOnline(a, b) ||
+        sortLinkLastOnline(a, b) ||
+        sortLinkLastConnected(a, b)
     )
 
     const visibleConnections = showMore
