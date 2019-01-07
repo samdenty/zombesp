@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 import tw from 'tailwind.macro'
 import posed from 'react-pose'
+import { Link } from 'gatsby'
 
-export const StyledConnection = styled('div')`
-  ${tw`flex py-3 px-4 cursor-pointer`};
+export const StyledConnection = styled(Link)`
+  ${tw`flex py-3 px-4 cursor-pointer no-underline text-grey-darkest`};
 `
 
 export const OnlineIndicator = styled(

@@ -9,3 +9,8 @@
   "events": "^3.0.0"
 },
 ```
+
+2.  Add the following to webpack config:
+
+```js
+```

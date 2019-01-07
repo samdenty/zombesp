@@ -8,11 +8,11 @@ import { Zombies } from '../components/Zombies'
 import { useSDK } from '../hooks'
 
 export default function Index() {
-  const sdk = useSDK
+  const sdk = useSDK()
 
   return (
     <Layout>
-      <Zombies />
+      {sdk && <Zombies />}
 
       {/* <div style={{ backgroundColor: '#292929' }}>
         <Console logs={this.state.logs} variant="dark" />

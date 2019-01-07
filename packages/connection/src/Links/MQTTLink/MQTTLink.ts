@@ -1,4 +1,4 @@
-import { connect, MqttClient, Packet } from 'mqtt'
+import { connect, MqttClient, Packet } from 'mqtt/lib/connect'
 import { Link, BaseLink } from '../../Link'
 import {
   createClientId,

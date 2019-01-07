@@ -26,7 +26,7 @@ export type ConnectionProps = {
 
 export const Connection = observer(({ connection, link }: ConnectionProps) => {
   return (
-    <StyledConnection>
+    <StyledConnection to="/zombie/">
       <OnlineIndicator
         pose={link.online ? 'online' : link.connected ? 'connected' : 'offline'}
       />
