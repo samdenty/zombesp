@@ -52,6 +52,7 @@ export class MQTTLink extends BaseLink implements Link {
           username: this.username,
           password: this.password,
           clientId: createClientId(),
+          reconnectPeriod: 500,
         }
       )
 
