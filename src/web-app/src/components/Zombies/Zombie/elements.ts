@@ -19,7 +19,11 @@ export const TextSpacing = styled('div')`
 `
 
 export const Section = styled('section')`
-  ${tw`flex flex-col border-b-2 border-grey-lighter  py-3`};
+  ${tw`flex flex-col py-3`};
+
+  &:not(:last-child) {
+    ${tw`border-b-2 border-grey-lighter`};
+  }
 `
 
 export const SectionTitle = styled('h3')`

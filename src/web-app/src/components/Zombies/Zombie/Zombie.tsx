@@ -9,18 +9,31 @@ import {
   ConnectionsSection,
 } from './elements'
 import { ZombieConnections } from '../../ZombieConnections'
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../Dialog'
+import { useState } from 'react'
+import { Button } from '../../Button'
+import { useBoolean } from 'react-hanger'
 
 export interface ZombieProps {
   id: string
+  recurse?: boolean
 }
 
-export const Zombie = observer(({ id }: ZombieProps) => {
+export const Zombie = observer(({ id, recurse }: ZombieProps) => {
+  const dialog = useBoolean(false)
   const sdk = useSDK()
+
   const zombie = sdk.zombies.get(id)
 
   return (
     <StyledZombie>
-      <Section>
+      {!recurse && (
+        <Dialog isOpen={dialog.value} onToggle={dialog.setValue}>
+          <Zombie id={id} recurse />
+        </Dialog>
+      )}
+
+      <Section onClick={dialog.setTrue}>
         <ZombieName>{zombie.id}</ZombieName>
       </Section>
 

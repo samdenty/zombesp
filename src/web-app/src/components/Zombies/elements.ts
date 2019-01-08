@@ -11,7 +11,7 @@ export const StyledZombies = styled('div')`
 `
 
 export const Item = styled('div')`
-  ${tw`flex flex-col bg-white container max-w-sm rounded-lg overflow-hidden font-sans`};
+  ${tw`flex flex-col bg-white container max-w-sm rounded-lg overflow-hidden`};
 `
 
 export const AddZombie = styled(Item.withComponent('button'))`

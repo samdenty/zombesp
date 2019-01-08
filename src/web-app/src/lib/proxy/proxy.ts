@@ -23,7 +23,7 @@ overrideNativeWebsocket(url => {
 
     setTimeout(() => {
       if (!client.server) {
-        console.warn('Need to launch server!')
+        // console.warn('Need to launch server!')
       }
     }, 400)
   }

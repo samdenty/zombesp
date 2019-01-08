@@ -132,6 +132,10 @@ html {
   box-sizing: border-box;
 }
 
+button {
+  font-family: inherit;
+}
+
 *,
 *:before,
 *:after {
