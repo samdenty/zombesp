@@ -1,4 +1,5 @@
 import { Link } from './Link'
+import { computed } from 'mobx'
 
 type EmitOptions = {
   strategy: 'fallback' | 'race'
@@ -7,20 +8,22 @@ type EmitOptions = {
 export class Connection {
   public links = new Set<Link>()
 
-  constructor() {
-    this.connect()
-  }
+  constructor() {}
 
-  public async isConnected() {
+  @computed
+  public get connected() {
+    for (const link of this.links) {
+      if (link.connected) return true
+    }
     return false
   }
 
-  public async connect() {
-    for (const protocol of this.links) {
-      // try {
-      protocol.connect()
-      // }
+  @computed
+  public get online() {
+    for (const link of this.links) {
+      if (link.online) return true
     }
+    return false
   }
 
   public async emit(

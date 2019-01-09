@@ -22,10 +22,10 @@ export class MQTTLink extends BaseLink implements Link {
   public client: MqttClient
 
   constructor(
-    private mqttAddress: string,
-    private deviceId: string,
-    private username?: string,
-    private password?: string
+    public readonly mqttAddress: string,
+    public readonly deviceId: string,
+    public readonly username?: string,
+    public readonly password?: string
   ) {
     super()
 
@@ -124,6 +124,7 @@ export class MQTTLink extends BaseLink implements Link {
     const listener = { topic, callback }
     this.listeners.add(listener)
 
+    console.log('subbed to', mqttTopic)
     this.client.subscribe(mqttTopic)
 
     return () => {
@@ -133,7 +134,10 @@ export class MQTTLink extends BaseLink implements Link {
         listener => listener.topic === topic
       )
 
-      if (noMoreSubscriptions) this.client.unsubscribe(mqttTopic)
+      if (noMoreSubscriptions) {
+        console.log('unsubbed from ', mqttTopic)
+        this.client.unsubscribe(mqttTopic)
+      }
     }
   }
 

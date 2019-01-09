@@ -11,6 +11,7 @@ export class MQTTConnection extends DB.MQTTConnection {
     const links = observable.map(
       this.zombies.map(({ id, mqttLink }): [string, MQTTLink] => [id, mqttLink])
     )
+
     return links
   }
 
