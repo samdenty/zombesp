@@ -22,10 +22,10 @@ export class MQTTLink extends BaseLink implements Link {
   public client: MqttClient
 
   constructor(
-    public readonly mqttAddress: string,
-    public readonly deviceId: string,
-    public readonly username?: string,
-    public readonly password?: string
+    private mqttAddress: string,
+    private deviceId: string,
+    private username?: string,
+    private password?: string
   ) {
     super()
 

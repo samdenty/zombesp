@@ -10,7 +10,7 @@ extern Timer timer;
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 
-String clientId = "testing";
+String clientId = "esp8266";
 const char* mqttServer = "192.168.1.104";
 const int mqttPort = 1883;
 
@@ -91,6 +91,8 @@ void MQTTConnection::mqttEvent(String mqttTopic, byte* payload,
 
     // Capture and serialize acknowledgement
     JsonVariant data = espCom.handleMessage(topic, message[2], jsonBuffer);
+
+    Serial.print(topic);
 
     emit("ack/" + clientRef, jsonBuffer, data, reqId);
   }

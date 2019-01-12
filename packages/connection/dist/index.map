@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA,OAAO,CAAC,GAAR,CAAY,OAAZ","file":"index.map","sourceRoot":"../demo","sourcesContent":["console.log('hello')\r\n"]}

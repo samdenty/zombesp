@@ -8,8 +8,8 @@ Timer timer;
 ESP8266WebServer server(80);
 ESPCom espCom;
 
-const char* ssid = "network";
-const char* password = "pass";
+const char* ssid = "testing-iot";
+const char* password = "testing-iot";
 
 String WebPage =
     "<!DOCTYPE html><html><style>input[type=\"text\"]{width: 90%; height: "

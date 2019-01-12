@@ -1,0 +1,6 @@
+syntax = "proto3";
+package events;
+
+message KeyPress {
+  int32 key_code = 1;
+}
