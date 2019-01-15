@@ -4,7 +4,7 @@ cd "${0%/*}"
 
 base="../../../../../packages/connection/protobuf/"
 output="../../lib/protobuf"
-index=$output/protobuf.h
+index=$output/protobuf.pb.h
 
 rm -rf $output
 mkdir -p $output

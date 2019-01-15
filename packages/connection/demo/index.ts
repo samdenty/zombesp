@@ -41,6 +41,25 @@ async function bootstrap() {
 
   const decoded = unpackEvent(events.MessageEvent.decode(encoded))
 
+  console.log(
+    events.MessageEvent.encode(
+      events.MessageEvent.create({
+        event: events.MessageEvent.EventName.KeyPress,
+        message: events.KeyPress.encode(
+          events.KeyPress.create({
+            keyCode: 7445,
+          })
+        ).finish(),
+      })
+    ).finish()
+  )
+
+  const messageEvent = unpackEvent(
+    events.MessageEvent.decode(Uint8Array.from([26, 3, 8, 193, 8]))
+  )
+
+  console.log(messageEvent)
+
   console.log(encoded, decoded)
   const service = commands.Commands.create((method, requestData, callback) => {
     const eventId = commands.MessageEvent.EventName[method.name]
