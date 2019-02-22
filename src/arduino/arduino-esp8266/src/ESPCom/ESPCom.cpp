@@ -2,7 +2,7 @@
 #include <ArduinoJson.h>
 #include <Timer.h>
 
-#include "./CloudConnection/CloudConnection.h"
+#include "./MQTTConnection/MQTTConnection.h"
 #include "./DirectConnection/DirectConnection.h"
 #include "ESPCom.h"
 
@@ -10,7 +10,7 @@ extern Timer timer;
 extern ESPCom espCom;
 
 DirectConnection directConnection;
-CloudConnection cloudConnection;
+MQTTConnection mqttConnection;
 
 double reqCount;
 
@@ -27,12 +27,12 @@ ESPCom::ESPCom() { Serial.print("Constructor called"); }
 
 void ESPCom::setup() {
   directConnection.setup();
-  cloudConnection.setup();
+  mqttConnection.setup();
 }
 
 void ESPCom::loop() {
   directConnection.loop();
-  cloudConnection.loop();
+  mqttConnection.loop();
 }
 
 JsonVariant ESPCom::handleMessage(String topic, JsonVariant data,
@@ -64,13 +64,13 @@ JsonVariant ESPCom::handleMessage(String topic, JsonVariant data,
 }
 
 bool ESPCom::connected() {
-  return cloudConnection.connected() || directConnection.connected();
+  return mqttConnection.connected() || directConnection.connected();
 }
 
 void ESPCom::emit(String topic, DynamicJsonBuffer& jsonBuffer,
                   JsonVariant data = 0) {
   directConnection.emit(topic, jsonBuffer, data);
-  cloudConnection.emit(topic, jsonBuffer, data);
+  mqttConnection.emit(topic, jsonBuffer, data);
 }
 
 JsonVariant ESPCom::on(String topic, void (*callback)(JsonVariant data, DynamicJsonBuffer& jsonBuffer)) {

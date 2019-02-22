@@ -4,7 +4,7 @@ import { Zombie } from '../Zombie'
 import { ObjectType, Field } from 'type-graphql'
 import { Type } from 'class-transformer'
 
-@Entity()
+@Entity('direct_connection')
 @ObjectType({ implements: Connection })
 export class DirectConnection extends Connection {
   @Type(type => Zombie)

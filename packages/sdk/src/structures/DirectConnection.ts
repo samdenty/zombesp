@@ -18,10 +18,12 @@ export class DirectConnection extends DB.DirectConnection {
         () => this.address,
         address => {
           if (this.link) this.link.dispose()
+
           this.link = new DirectLink(address)
 
           this.sdk.hydrate(this.link, this.id)
-        }
+        },
+        { fireImmediately: true }
       ),
     ]
   }

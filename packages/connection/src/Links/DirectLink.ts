@@ -15,6 +15,8 @@ export class DirectLink extends BaseLink implements Link {
   constructor(private websocketAddress: string) {
     super()
 
+    this.connect()
+
     this.on('ack', (_, res) => {
       const req = this.requests.find(req => req.id === res.id)
 

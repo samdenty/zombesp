@@ -6,6 +6,10 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "tsc": "rm -rf lib; tsc",
+    "start": "parcel serve ./demo/index.html",
+    "generate": "yarn generate:js; yarn generate:ts",
+    "generate:js": "pbjs -t static-module -w commonjs -o src/generated/index.js protobuf/**/*.proto",
+    "generate:ts": "pbts -o src/generated/index.d.ts src/generated/index.js",
     "watch": "yarn tsc -w",
     "build": "yarn tsc"
   },
@@ -17,7 +21,8 @@
     "mobx": "^5.8.0",
     "mobx-persist": "^0.4.1",
     "mobx-utils": "^5.1.0",
-    "mqtt": "^2.18.8"
+    "mqtt": "^2.18.8",
+    "protobufjs": "^6.8.8"
   },
   "devDependencies": {
     "@types/escape-string-regexp": "^1.0.0"

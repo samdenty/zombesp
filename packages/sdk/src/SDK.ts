@@ -1,5 +1,5 @@
 import './utils/makeObservable'
-import { observable } from 'mobx'
+import { observable, runInAction, action } from 'mobx'
 import { create, IHydrateResult } from 'mobx-persist'
 import * as DB from '@esprat/db'
 
@@ -43,6 +43,7 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
     zombies.forEach(z => this.updateZombie(z))
   }
 
+  @action
   private updateZombie(data: DB.Zombie) {
     const zombie = this.zombies.get(data.id) || new Zombie(this)
     delete data['directConnections']
@@ -72,6 +73,7 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
     mqttConnections.forEach(m => this.updateMqttConnection(m))
   }
 
+  @action
   private updateMqttConnection(data: DB.MQTTConnection) {
     const mqttConnection =
       this.mqttConnections.get(data.id) || new MQTTConnection(this)
@@ -83,6 +85,7 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
     }
 
     delete data['zombies']
+
     Object.assign(mqttConnection, data)
 
     this.mqttConnections.set(mqttConnection.id, mqttConnection)
@@ -102,6 +105,7 @@ export class SDK<Database extends DB.IDatabase = DB.IDatabase> {
     directConnections.forEach(d => this.updateDirectConnection(d))
   }
 
+  @action
   private updateDirectConnection(data: DB.DirectConnection) {
     const directConnection =
       this.directConnections.get(data.id) || new DirectConnection(this)

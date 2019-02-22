@@ -4,9 +4,9 @@
 
 extern double reqCount;
 
-class CloudConnection {
+class MQTTConnection {
 public:
-  CloudConnection();
+  MQTTConnection();
 
   static void reconnect();
 

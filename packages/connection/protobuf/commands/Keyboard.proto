@@ -1,0 +1,10 @@
+syntax = "proto3";
+package commands;
+
+message PressKeyRequest {
+    int32 key_code = 1;
+}
+
+message TypeTextRequest {
+    string text = 1;
+}

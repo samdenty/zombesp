@@ -1,4 +1,4 @@
-#include "CloudConnection.h"
+#include "MQTTConnection.h"
 #include "../ESPCom.h"
 #include <Timer.h>
 #include <ESP8266WiFi.h>
@@ -10,34 +10,34 @@ extern Timer timer;
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 
-String clientId = "testing";
+String clientId = "esp8266";
 const char* mqttServer = "192.168.1.104";
 const int mqttPort = 1883;
 
 int reconnectTimer = -1;
 
-CloudConnection::CloudConnection() {}
+MQTTConnection::MQTTConnection() {}
 
-void CloudConnection::loop() {
+void MQTTConnection::loop() {
   if (!connected() && reconnectTimer == -1) reconnect();
 
   client.loop();
 }
 
-void CloudConnection::setup() {
+void MQTTConnection::setup() {
   client.setServer(mqttServer, mqttPort);
   client.setCallback([=](char* topic, byte* payload, unsigned int length) {
     return this->mqttEvent(topic, payload, length);
   });
 }
 
-bool CloudConnection::connected() {
+bool MQTTConnection::connected() {
   return client.connected();
 }
 
 // TODO: Check how long ago we was previously connected to the server to calculate the interval between retries.
 // Possibly randomize it as well, to make the network traffic look inconspicuous.
-void CloudConnection::reconnect() {
+void MQTTConnection::reconnect() {
   Serial.print("Attempting to connect to MQTT...");
 
   if (client.connect(clientId.c_str())) {
@@ -50,7 +50,7 @@ void CloudConnection::reconnect() {
   }
 }
 
-void CloudConnection::emit(String topic, DynamicJsonBuffer& jsonBuffer,
+void MQTTConnection::emit(String topic, DynamicJsonBuffer& jsonBuffer,
                            JsonVariant data, double id) {
   String mqttTopic = encodeStatusTopic(clientId, topic);
   String mqttMessage = serialize(jsonBuffer, data, id);
@@ -58,15 +58,15 @@ void CloudConnection::emit(String topic, DynamicJsonBuffer& jsonBuffer,
   client.publish(mqttTopic.c_str(), (const char*)mqttMessage.c_str());
 }
 
-String CloudConnection::encodeCommandTopic(String clientId, String topic) {
+String MQTTConnection::encodeCommandTopic(String clientId, String topic) {
   return clientId + "/command/" + topic;
 }
 
-String CloudConnection::encodeStatusTopic(String clientId, String topic) {
+String MQTTConnection::encodeStatusTopic(String clientId, String topic) {
   return clientId + "/status/" + topic;
 }
 
-String CloudConnection::decodeCommandTopic(String clientId, String mqttTopic) {
+String MQTTConnection::decodeCommandTopic(String clientId, String mqttTopic) {
   String before = encodeCommandTopic(clientId, "");
   if (!mqttTopic.startsWith(before))
     return "";
@@ -75,7 +75,7 @@ String CloudConnection::decodeCommandTopic(String clientId, String mqttTopic) {
   return topic;
 }
 
-void CloudConnection::mqttEvent(String mqttTopic, byte* payload,
+void MQTTConnection::mqttEvent(String mqttTopic, byte* payload,
                                 unsigned int length) {
   String topic = decodeCommandTopic(clientId, mqttTopic);
 
@@ -92,11 +92,13 @@ void CloudConnection::mqttEvent(String mqttTopic, byte* payload,
     // Capture and serialize acknowledgement
     JsonVariant data = espCom.handleMessage(topic, message[2], jsonBuffer);
 
+    Serial.print(topic);
+
     emit("ack/" + clientRef, jsonBuffer, data, reqId);
   }
 }
 
-String CloudConnection::serialize(DynamicJsonBuffer& jsonBuffer,
+String MQTTConnection::serialize(DynamicJsonBuffer& jsonBuffer,
                                   JsonVariant data,
                                   double id) {
   JsonArray& message = jsonBuffer.createArray();

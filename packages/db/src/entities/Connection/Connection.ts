@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn } from 'typeorm'
 import { InterfaceType, Field, ID } from 'type-graphql'
 
 @InterfaceType()
-@Entity()
+@Entity('connection')
 export abstract class Connection {
   @Field(type => ID)
   @PrimaryGeneratedColumn()

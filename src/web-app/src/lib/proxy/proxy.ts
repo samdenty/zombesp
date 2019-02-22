@@ -13,8 +13,7 @@ export const createServer = () => {
 }
 
 overrideNativeWebsocket(url => {
-  const override =
-    true || (location.protocol === 'https:' && url.protocol === 'ws:')
+  const override = location.protocol === 'https:' && url.protocol === 'ws:'
 
   if (override && !client.server) {
     // Not connected, this websocket is going to fail

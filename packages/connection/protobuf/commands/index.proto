@@ -1,0 +1,22 @@
+syntax = "proto3";
+import "Keyboard.proto";
+package commands;
+
+message Empty {}
+
+service Commands {
+  rpc PressKey(PressKeyRequest) returns (stream Empty);
+  rpc TypeText(TypeTextRequest) returns (Empty);
+}
+
+message MessageEvent {
+  enum EventName {
+    PressKey = 0;
+    TypeText = 1;
+  }
+
+  EventName event = 1;
+  int32 id = 2;
+
+  bytes message = 3;
+}

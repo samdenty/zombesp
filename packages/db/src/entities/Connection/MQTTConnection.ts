@@ -4,7 +4,7 @@ import { Zombie } from '../Zombie'
 import { ObjectType, Field } from 'type-graphql'
 import { Type } from 'class-transformer'
 
-@Entity()
+@Entity('mqtt_connection')
 @ObjectType({ implements: Connection })
 export class MQTTConnection extends Connection {
   @Type(type => Zombie)

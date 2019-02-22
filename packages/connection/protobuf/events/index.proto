@@ -1,0 +1,13 @@
+syntax = "proto3";
+package events;
+
+message MessageEvent {
+  enum EventName {
+    KeyPress = 0;
+  }
+
+  EventName event = 1;
+  int32 id = 2;
+
+  bytes message = 3;
+}

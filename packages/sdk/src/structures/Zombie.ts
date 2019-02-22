@@ -2,7 +2,7 @@ import * as DB from '@esprat/db'
 import { Connection, MQTTLink, DirectLink } from '@esprat/connection'
 import { MQTTConnection } from './MQTTConnection'
 import { DirectConnection } from './DirectConnection'
-import { observable, autorun, computed, reaction } from 'mobx'
+import { observable, autorun, computed, reaction, comparer } from 'mobx'
 import { SDK } from '../SDK'
 
 export class Zombie extends DB.Zombie {
@@ -53,6 +53,10 @@ export class Zombie extends DB.Zombie {
           this.directConnections.forEach(({ link }) => {
             this.connection.links.add(link)
           })
+
+          if (this.mqttLink) {
+            this.connection.links.add(this.mqttLink)
+          }
         }
       }),
       reaction(
@@ -78,7 +82,8 @@ export class Zombie extends DB.Zombie {
             this.mqttLink,
             `${this.id}:${this.mqttConnection.id}`
           )
-        }
+        },
+        { fireImmediately: true, equals: comparer.structural }
       ),
     ]
   }

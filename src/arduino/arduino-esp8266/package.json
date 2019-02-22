@@ -1,0 +1,9 @@
+{
+  "name": "arduino-esp8266",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "generate": "bash ./utils/protobuf-generator/generate.sh"
+  },
+  "license": "MIT"
+}
